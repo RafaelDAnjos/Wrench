@@ -1,0 +1,7 @@
+{
+  "name": "Wrench-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

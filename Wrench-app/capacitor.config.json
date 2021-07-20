@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Wrench-app",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
