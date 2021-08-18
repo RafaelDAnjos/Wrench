@@ -1,0 +1,7 @@
+{
+  "name": "Wrench-prestador",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

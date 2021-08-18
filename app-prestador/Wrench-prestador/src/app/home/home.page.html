@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar class='aligned-toolbar' color='primary'>
+
+    <ion-title class='large-title' color='light'>
+      <ion-icon name='build-sharp' color='light' size='large'></ion-icon>Wrench
+    </ion-title>
+    
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="container">
+
+    <ion-card>
+      <ion-item>
+        <strong>
+          <ion-label position='stacked'>Email:</ion-label>
+        </strong>
+        <ion-input type='email' placeholder='Email'></ion-input>
+      </ion-item>
+      <ion-item>
+        <strong>
+          <ion-label position='stacked'>Senha:</ion-label>
+        </strong>
+        <ion-input type="password" placeholder="Senha"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-button expand= "block" (click)="showPageDemandas()" >Entrar</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button expand = "block" (click) = "showPageCadastro()">Cadastrar</ion-button>
+      </ion-item>
+      <ion-item>
+        <a>recuperar senha</a>
+      </ion-item>
+    </ion-card>
+  </div>
+</ion-content>
