@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { Local } from 'protractor/built/driverProviders';
 import { AutorizacaoService } from 'src/app/services/autorizacao.service';
 
@@ -14,7 +14,7 @@ export class CadastrarPage implements OnInit {
   inputIdentificacao:string;
   inputSenha:string;
   inputRepetirSenha:string;
-  constructor(private authService:AutorizacaoService, private toastCtrl: ToastController) { }
+  constructor(private authService:AutorizacaoService, private toastCtrl: ToastController, private navCtrl:NavController) { }
 
   ngOnInit() {
   }
@@ -40,5 +40,8 @@ export class CadastrarPage implements OnInit {
       toast.present();
     }
   }
+   async showPageDemandas(){
+     this.navCtrl.navigateForward('demandas')
+   }
 
 }
