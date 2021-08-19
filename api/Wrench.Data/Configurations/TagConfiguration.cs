@@ -18,6 +18,8 @@ namespace Wrench.Data.Configurations
                 .Property(x => x.Nome)
                 .IsRequired();
 
+            builder.Property(x => x.Ativo)
+                .IsRequired();
         }
     }
 }
