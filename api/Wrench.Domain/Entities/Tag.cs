@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Wrench.Domain.Entities.Identity;
 
 namespace Wrench.Domain.Entities
 {
@@ -18,6 +20,8 @@ namespace Wrench.Domain.Entities
         public int IdTag { get; set; }
         public string Nome { get; set; }
         public bool Ativo { get; set; }
+
+        public ICollection<AppUser> AtribuidosPara { get; set; }
 
         public void AlterarInformacao(string nome)
         {
