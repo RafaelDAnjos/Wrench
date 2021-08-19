@@ -13,7 +13,7 @@ using Wrench.Domain.Entities.Identity;
 namespace Wrench.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
@@ -50,6 +50,13 @@ namespace Wrench.API.Controllers
 
             if (!result.Succeeded)
                 return BadRequest(new { Sucesso = false, Errors = new[] { "Houve um erro ao cadastrar o usuário" } });
+
+            string role;
+
+            if (user.Tipo == TipoUsuario.DEMANDANTE) role = "Demandante";
+            else role = "Prestador";
+
+            await _userManager.AddToRoleAsync(user, role);
 
             return Ok(new { Sucesso = true, user.Nome, user.Email, Token = GenerateToken(user) });
         }
