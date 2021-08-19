@@ -3,36 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wrench.Data.Context;
 
 namespace Wrench.Data.Migrations
 {
     [DbContext(typeof(WrenchDbContext))]
-    partial class WrenchDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210819022049_correcao_tag1")]
+    partial class correcao_tag1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("AppUserTag", b =>
-                {
-                    b.Property<Guid>("AtribuidosParaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TagsIdTag")
-                        .HasColumnType("int");
-
-                    b.HasKey("AtribuidosParaId", "TagsIdTag");
-
-                    b.HasIndex("TagsIdTag");
-
-                    b.ToTable("TagUsers");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
@@ -398,21 +385,6 @@ namespace Wrench.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Tag");
-                });
-
-            modelBuilder.Entity("AppUserTag", b =>
-                {
-                    b.HasOne("Wrench.Domain.Entities.Identity.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("AtribuidosParaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Wrench.Domain.Entities.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsIdTag")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
