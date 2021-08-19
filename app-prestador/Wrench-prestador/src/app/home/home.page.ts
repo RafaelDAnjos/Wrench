@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
+import { Local } from 'protractor/built/driverProviders';
+import { AutorizacaoService } from '../services/autorizacao.service';
 
 @Component({
   selector: 'app-home',
@@ -7,18 +9,36 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-
-  constructor(private navCtrl: NavController) { }
+  inputEmail:string;
+  inputSenha:string;
+  constructor(private navCtrl:NavController, private authService: AutorizacaoService, private toastCtrl:ToastController) { }
 
   ngOnInit() {
   }
 
   async showPageDemandas(){
-    await this.navCtrl.navigateForward('listar-demandas');
+    await this.navCtrl.navigateForward('demandas');
   }
   async showPageCadastro(){
-
-    await this.navCtrl.navigateForward('cadastro');
+    await this.navCtrl.navigateForward('cadastrar');
+  }
+  async login(){
+    let user = {
+      email: this.inputEmail,
+      senha: this.inputSenha
+    }
+    let response = await this.authService.logar(user);
+    if(response.Sucesso){
+      localStorage.setItem('usuario_logado',response.Token);
+      this.showPageDemandas();
+    }else{
+      let toast = await this.toastCtrl.create({
+        message: response.Errors[0],
+        duration: 1000,
+        position: 'top'
+      });
+      toast.present();
+    }
   }
 
 }

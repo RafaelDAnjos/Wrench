@@ -17,16 +17,16 @@
         <strong>
           <ion-label position='stacked'>Email:</ion-label>
         </strong>
-        <ion-input type='email' placeholder='Email'></ion-input>
+        <ion-input type='email' placeholder='Email' [(ngModel)] = 'inputEmail'></ion-input>
       </ion-item>
       <ion-item>
         <strong>
           <ion-label position='stacked'>Senha:</ion-label>
         </strong>
-        <ion-input type="password" placeholder="Senha"></ion-input>
+        <ion-input type="password" placeholder="Senha" [(ngModel)] = 'inputSenha'></ion-input>
       </ion-item>
       <ion-item>
-        <ion-button expand= "block" (click)="showPageDemandas()" >Entrar</ion-button>
+        <ion-button expand= "block" (click)="login()" >Entrar</ion-button>
       </ion-item>
       <ion-item>
         <ion-button expand = "block" (click)="showPageCadastro()">Cadastrar</ion-button>
