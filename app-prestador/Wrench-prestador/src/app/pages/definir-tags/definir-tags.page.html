@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar color = "primary">
+    <ion-title color = "light">Defina Tags</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor = "let tag of tags">
+      <ion-chip>
+        <ion-label>{{tag.nome}}</ion-label>
+        <ion-toggle color = "success" (ionChange) = 'statusChange(tag,$event)'></ion-toggle>
+      </ion-chip>
+    </ion-item>
+    
+
+  </ion-list>
+</ion-content>

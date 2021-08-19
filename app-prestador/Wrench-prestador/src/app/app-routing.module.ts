@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'cadastro',
     loadChildren: () => import('./pages/cadastro/cadastro.module').then( m => m.CadastroPageModule)
+  },
+  {
+    path: 'definir-tags',
+    loadChildren: () => import('./pages/definir-tags/definir-tags.module').then( m => m.DefinirTagsPageModule)
   }
 ];
 

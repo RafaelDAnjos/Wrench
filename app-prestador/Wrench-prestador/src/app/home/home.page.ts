@@ -20,7 +20,7 @@ export class HomePage implements OnInit {
     await this.navCtrl.navigateForward('demandas');
   }
   async showPageCadastro(){
-    await this.navCtrl.navigateForward('cadastrar');
+    await this.navCtrl.navigateForward('cadastro');
   }
   async login(){
     let user = {
