@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Wrench.API.ViewModels;
+using Wrench.API.ViewModels.Auth;
 using Wrench.Domain.Entities.Identity;
 
 namespace Wrench.API.Controllers
@@ -19,19 +19,24 @@ namespace Wrench.API.Controllers
         private readonly ILogger<AuthController> _logger;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<AppRole> _roleManager;
 
         public AuthController(ILogger<AuthController> logger,
                               SignInManager<AppUser> signInManager,
-                              UserManager<AppUser> userManager)
+                              UserManager<AppUser> userManager,
+                              RoleManager<AppRole> roleManager)
         {
             _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [HttpPost("registrar")]
         public async Task<ActionResult> RegistrarUsuario(RegistrarUsuarioViewModel registrarUsuarioViewModel)
         {
+            await GarantirRolesBasicas();
+
             var user = await _userManager.FindByEmailAsync(registrarUsuarioViewModel.Email);
 
             if (user != null)
@@ -93,6 +98,7 @@ namespace Wrench.API.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     user.Tipo == TipoUsuario.DEMANDANTE ? new Claim(ClaimTypes.Role, "Demandante") : new Claim(ClaimTypes.Role, "Prestador")
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
@@ -100,6 +106,19 @@ namespace Wrench.API.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        private async Task GarantirRolesBasicas()
+        {
+            if (!(await _roleManager.RoleExistsAsync("Prestador")))
+            {
+                await _roleManager.CreateAsync(new AppRole { Name = "Prestador" });
+            }
+
+            if (!(await _roleManager.RoleExistsAsync("Demandante")))
+            {
+                await _roleManager.CreateAsync(new AppRole { Name = "Demandante" });
+            }
         }
     }
 }

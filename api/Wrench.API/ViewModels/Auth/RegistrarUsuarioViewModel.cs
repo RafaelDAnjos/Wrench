@@ -1,6 +1,6 @@
 ﻿using Wrench.Domain.Entities.Identity;
 
-namespace Wrench.API.ViewModels
+namespace Wrench.API.ViewModels.Auth
 {
     public class RegistrarUsuarioViewModel
     {

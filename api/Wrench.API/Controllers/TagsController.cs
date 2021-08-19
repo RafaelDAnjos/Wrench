@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using Wrench.API.ViewModels;
+using Wrench.API.ViewModels.Tags;
 using Wrench.Data.Context;
 using Wrench.Domain.Entities;
 

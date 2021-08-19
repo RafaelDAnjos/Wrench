@@ -1,4 +1,4 @@
-﻿namespace Wrench.API.ViewModels
+﻿namespace Wrench.API.ViewModels.Auth
 {
     public class LoginUsuarioViewModel
     {
