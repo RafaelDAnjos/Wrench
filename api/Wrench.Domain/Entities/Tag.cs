@@ -14,7 +14,7 @@ namespace Wrench.Domain.Entities
         public Tag(string nome)
         {
             Ativo = true;
-            Nome = nome;
+            Nome = nome.ToUpper();
         }
 
         public int IdTag { get; set; }
