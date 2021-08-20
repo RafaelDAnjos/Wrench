@@ -22,6 +22,7 @@ namespace Wrench.Domain.Entities
         public bool Ativo { get; set; }
 
         public ICollection<AppUser> AtribuidosPara { get; set; }
+        public ICollection<Demanda> Demandas { get; set; }
 
         public void AlterarInformacao(string nome)
         {

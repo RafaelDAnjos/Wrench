@@ -30,6 +30,14 @@ namespace Wrench.API
 
             services.AddIdentityJwt();
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin();
+                });
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Wrench.API", Version = "v1" });
