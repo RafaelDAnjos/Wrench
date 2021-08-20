@@ -29,7 +29,7 @@ export class HomePage implements OnInit {
     }
     let response = await this.authService.logar(user);
     if(response.Sucesso){
-      localStorage.setItem('usuario_logado',response.Token);
+      localStorage.setItem('usuario_logado',response.token);
       this.showPageDemandas();
     }else{
       let toast = await this.toastCtrl.create({
