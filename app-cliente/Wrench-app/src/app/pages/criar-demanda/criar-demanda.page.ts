@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { TagService } from 'src/app/services/tag.service';
 
 @Component({
   selector: 'app-criar-demanda',
@@ -13,37 +14,10 @@ export class CriarDemandaPage implements OnInit {
   descD: string;
 
   demandas:any[] = [];
-  constructor(private navCtrl:NavController, private alertCtrl:AlertController) {
+  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private tagService:TagService, private toastCtrl:ToastController) {
     this.demandas = JSON.parse(localStorage.getItem('demandas'));
     this.tituloD = '';
     this.descD= '';
-    this.tags = [
-      {
-        id: 1,
-        titulo:"tag 1" ,
-        check: false ,
-      },
-      {
-        id: 2,
-        titulo:"tag 2" ,
-        check: false ,
-      },
-      {
-        id: 3,
-        titulo:"tag 3" ,
-        check: false ,
-      },
-      {
-        id: 4,
-        titulo:"tag 4" ,
-        check: false,
-      },
-      {
-        id: 5,
-        titulo:"tag 5" ,
-        check: false,
-      }
-    ];
   }
   
   ngOnInit() {
@@ -76,26 +50,64 @@ export class CriarDemandaPage implements OnInit {
 
   }
   async criarTag(){
-    const alerta = await this.alertCtrl.create({
-      message: "Criar nova tag",
-      inputs:[{
-        name: 'titulo',
+    let alerta = await this.alertCtrl.create({
+      header: 'Crie sua tag',
+      inputs: [{
+        name: 'Tag',
         type: 'text',
-        placeholder: 'Insira o titulo da tag'
+        placeholder: 'Entre com titulo da sua tag'
+
       }],
-      buttons:[{
-        text: 'Confirmar',
-        handler: (form)=>{
-          this.tags.push({titulo: form.titulo,done:false});
+      buttons: [{
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+          console.log('Confirm Cancel:');
         }
 
       },
-        {
-        text:'Cancelar',
-        role: 'cancel'
-      }]
+      {
+        text: 'Adicionar',
+        handler: (form) => {
+          this.add(form.Tag);
+        }
+
+
+      }],
     });
+
     alerta.present();
+  }
+  async add(newTag: string) {
+    if (newTag.trim().length < 1) {
+
+      const toast = await this.toastCtrl.create({
+        message: 'Titulo da tag está vazio',
+        duration: 2000,
+        position: 'top'
+      });
+      toast.present();
+      return;
+    }
+    let tag = { nome: newTag};
+    await this.tagService.criarTag(tag);
+
+    this.buscarListaTag();
+  }
+  
+  async buscarListaTag(){
+    this.tags = await this.tagService.buscarTags();
+    let i;
+    for(i=0;i<this.tags.length;i++){
+      this.tags[i] = {
+        nome: this.tags[i].nome,
+        id: this.tags[i].idTag,
+        check: false
+      }
+    }
+  
+    
   }
 
 }
