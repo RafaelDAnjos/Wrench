@@ -17,7 +17,7 @@ export class HomePage implements OnInit {
   }
 
   async showPageDemandas(){
-    await this.navCtrl.navigateForward('demandas');
+    await this.navCtrl.navigateForward('listar-demandas');
   }
   async showPageCadastro(){
     await this.navCtrl.navigateForward('cadastro');
@@ -28,7 +28,10 @@ export class HomePage implements OnInit {
       senha: this.inputSenha
     }
     let response = await this.authService.logar(user);
+
     if(response.Sucesso){
+
+
       localStorage.setItem('usuario_logado',response.token);
       this.showPageDemandas();
     }else{

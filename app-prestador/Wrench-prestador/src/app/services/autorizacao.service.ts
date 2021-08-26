@@ -10,7 +10,7 @@ export class AutorizacaoService {
 
   logar(json:any):Promise<any> {
   
-    return this.http.post(`${this.http}/api/auth/login`,json).toPromise();
+    return this.http.post(`${this.url}/api/auth/login`,json).toPromise();
   
   }
 

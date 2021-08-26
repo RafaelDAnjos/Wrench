@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wrench.Data.Context;
 
 namespace Wrench.Data.Migrations
 {
     [DbContext(typeof(WrenchDbContext))]
-    partial class WrenchDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210820180033_tag_demandas")]
+    partial class tag_demandas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,12 +253,6 @@ namespace Wrench.Data.Migrations
                     b.Property<Guid>("IdDemandante")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("IdPrestador")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PrestadorId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -265,8 +261,6 @@ namespace Wrench.Data.Migrations
                     b.HasKey("IdDemanda");
 
                     b.HasIndex("IdDemandante");
-
-                    b.HasIndex("PrestadorId");
 
                     b.ToTable("Demanda");
                 });
@@ -558,13 +552,7 @@ namespace Wrench.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Wrench.Domain.Entities.Identity.AppUser", "Prestador")
-                        .WithMany()
-                        .HasForeignKey("PrestadorId");
-
                     b.Navigation("Demandante");
-
-                    b.Navigation("Prestador");
                 });
 
             modelBuilder.Entity("Wrench.Domain.Entities.RegistroServico", b =>
