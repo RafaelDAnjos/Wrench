@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { DemandaService } from 'src/app/services/demanda.service';
 import { TagService } from 'src/app/services/tag.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class CriarDemandaPage implements OnInit {
   descD: string;
 
   demandas:any[] = [];
-  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private tagService:TagService, private toastCtrl:ToastController) {
+  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private tagService:TagService, private toastCtrl:ToastController, private demandaService:DemandaService) {
     this.demandas = JSON.parse(localStorage.getItem('demandas'));
     this.tituloD = '';
     this.descD= '';
@@ -22,25 +23,20 @@ export class CriarDemandaPage implements OnInit {
   
   ngOnInit() {
   }
-  criarNovaDemanda(){
+  async criarNovaDemanda(){
     let novaDemanda = {
       titulo: this.tituloD,
       descricao: this.descD,
       tags: this.tags.filter(tagItem=>tagItem.check == true)
     }
-    if(this.demandas == null){
-      let newdemandas:any[] = [];
-      newdemandas.push(novaDemanda);
-      localStorage.setItem('demandas',JSON.stringify(newdemandas));
-      this.navCtrl.navigateForward('demandas');    
-    }else{
-
-      this.demandas.push(novaDemanda);
-      localStorage.setItem('demandas',JSON.stringify(this.demandas));
+      
+      await this.demandaService.criarDemanda(novaDemanda);
       this.navCtrl.navigateForward('demandas');
-    }
+
+      
     
   }
+ 
   async voltar(){
     await this.navCtrl.navigateForward('demandas');
   }
