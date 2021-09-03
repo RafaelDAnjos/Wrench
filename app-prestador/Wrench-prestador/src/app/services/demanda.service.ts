@@ -16,7 +16,7 @@ export class DemandaService {
         Authorization: 'Bearer ' + token
       })
     };
-    return this.http.get(`${this.url}/api/demandas`,httpOptions).toPromise();
+    return this.http.get(`${this.url}/api/demandas/demandas-abertas`,httpOptions).toPromise();
   }
 
   criarDemanda(demanda:any,):Promise<any>{

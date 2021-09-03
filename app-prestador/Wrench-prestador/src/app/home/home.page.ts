@@ -29,9 +29,7 @@ export class HomePage implements OnInit {
     }
     let response = await this.authService.logar(user);
 
-    if(response.Sucesso){
-
-
+    if(response.sucesso){
       localStorage.setItem('usuario_logado',response.token);
       this.showPageDemandas();
     }else{

@@ -28,7 +28,7 @@ export class CadastroPage implements OnInit {
       tipoUsuario: 1
     }
     let response = await this.authService.cadastrar_usuario(usuario);
-    if(response.Sucesso){
+    if(response.sucesso){
       localStorage.setItem('usuario_logado',response.Token);
       this.showPageDefinirTags();
     }else{

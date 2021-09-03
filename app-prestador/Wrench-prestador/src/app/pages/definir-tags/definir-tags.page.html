@@ -9,7 +9,7 @@
     <ion-item *ngFor = "let tag of tags">
       <ion-chip>
         <ion-label>{{tag.nome}}</ion-label>
-        <ion-toggle color = "success" (ionChange) = 'statusChange(tag,$event)'></ion-toggle>
+        <ion-toggle color = "success" checked = {{tag.check}} (ionChange) = 'statusChange(tag,$event)'></ion-toggle>
       </ion-chip>
     </ion-item>
     

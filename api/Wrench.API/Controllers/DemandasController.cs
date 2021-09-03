@@ -120,7 +120,7 @@ namespace Wrench.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Demandante")]
-        public async Task<ActionResult> CriarDemandatAsync(CriarDemandaViewModel value)
+        public async Task<ActionResult> CriarDemandaAsync(CriarDemandaViewModel value)
         {
             var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var tags = _dbContext.Set<Tag>().Where(x => value.Tags.Contains(x.Nome.ToUpper())).ToList();

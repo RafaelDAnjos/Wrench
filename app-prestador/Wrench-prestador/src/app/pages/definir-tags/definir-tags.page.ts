@@ -19,13 +19,17 @@ export class DefinirTagsPage implements OnInit {
   }
 
   async buscarListaTag(){
+    let token = localStorage.getItem("usuario_logado");
+
     this.tags = await this.tagService.buscarTags();
+    let minhas_tags = (await this.usuarioService.buscarUsuario(token)).tags;
+
     let i;
     for(i=0;i<this.tags.length;i++){
       this.tags[i] = {
         nome: this.tags[i].nome,
         id: this.tags[i].idTag,
-        check: false
+        check: minhas_tags.some(tag => tag.idTag == this.tags[i].idTag)
       }
     }
   
@@ -80,22 +84,22 @@ export class DefinirTagsPage implements OnInit {
       return;
     }
     let tag = { nome: newTag};
-    await this.tagService.criarTag(tag);
+    let token = localStorage.getItem("usuario_logado")
+    await this.tagService.criarTag(tag, token);
 
     this.buscarListaTag();
   }
   async continuar(){
     let tags_ativas = this.tags.filter(tagItem=>tagItem.check == true);
-    let i;
-    for(i=0;i<tags_ativas.length;i++){
-      tags_ativas[i] = tags_ativas[i].nome
+
+    let tags_selecionadas = {
+      "tags": tags_ativas.map(tag => tag.nome)
     }
+    
     let token = localStorage.getItem("usuario_logado")
     let usuario  = await this.usuarioService.buscarUsuario(token);
-    await this.tagService.escolherTag(usuario,tags_ativas,token);
+    await this.tagService.escolherTag(usuario,tags_selecionadas,token);
     this.showPageDemandas();
-    
-    
   }
   async showPageDemandas(){
     this.navCtrl.navigateForward('listar-demandas')
