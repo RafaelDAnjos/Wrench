@@ -104,5 +104,11 @@ export class DefinirTagsPage implements OnInit {
   async showPageDemandas(){
     this.navCtrl.navigateForward('listar-demandas')
   }
+
+  logout(){
+    localStorage.removeItem('usuario_logado');
+    this.navCtrl.navigateForward('home');
+  }
+
 }
 

@@ -6,9 +6,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Demandas', url: '/listar-demandas', icon: 'mail' },
-    { title: 'Conversas', url: '/conversas', icon: 'chatbubbles' },
-    { title: 'Agenda', url: '/agenda', icon: 'calendar' },
+    { title: 'Demandas Recomendadas', url: '/listar-demandas', icon: 'mail' },
+    { title: 'Demandas Escolhidas', url: '/conversas', icon: 'chatbubbles' },
+    { title: 'Demandas na Agenda', url: '/agenda', icon: 'calendar' },
+    {title: 'Definir Tags',url:'/definir-tags',icon:'settings'}
   ];
  
   constructor() {}
