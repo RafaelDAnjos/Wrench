@@ -4,9 +4,33 @@
     <ion-buttons slot=start>
       <ion-menu-button color='light'></ion-menu-button>
     </ion-buttons>
+    <ion-buttons slot = 'end'>
+      <ion-button (click) = "logout()"><ion-icon name = 'exit' color = 'light'></ion-icon></ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-list>
+    <ion-card>
+      <ion-card-subtitle>Titulo da demanda</ion-card-subtitle>
+      <ion-grid>
+        <ion-row>
+          <ion-item>
+            <p>Prazo: prazo de conclusão</p>
+          </ion-item>
+        </ion-row>  
+        <ion-row>
+          <ion-item>
+            <p>Valor estimado: valor</p>
+          </ion-item>
+        </ion-row>  
+        <ion-row>
+          <ion-item>
+            <p>Contato: Celular do Prestador</p>
+          </ion-item>
+        </ion-row>  
+        </ion-grid>
+    </ion-card>
+  </ion-list>
 </ion-content>

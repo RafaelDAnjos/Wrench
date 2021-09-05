@@ -4,6 +4,9 @@
     <ion-buttons slot=start>
       <ion-menu-button color='light'></ion-menu-button>
     </ion-buttons>
+    <ion-buttons slot = 'end'>
+      <ion-button (click) = "logout()"><ion-icon name = 'exit' color = 'light'></ion-icon></ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -21,6 +24,20 @@
           <ion-chip color = "secondary" *ngFor= "let tag of demanda.tags">{{tag.nome}}</ion-chip>
         </ion-list>
       </ion-item>
+    </ion-card>
+    <ion-card  >
+      <ion-item >
+        <ion-label>demanda.titulo</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>demanda.descricao</ion-label>
+      </ion-item>
+      <ion-item >
+        <ion-list>
+          <ion-chip color = "secondary" >tag.nome</ion-chip>
+        </ion-list>
+      </ion-item>
+      <ion-button (click) = "escolherDemanda(demanda)">Escolher demanda</ion-button>
     </ion-card>
     </ion-list>
 </ion-content>
