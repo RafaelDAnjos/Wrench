@@ -2,6 +2,7 @@
 {
     public enum EstadoServico
     {
+        AGUARDANDO,
         AGENDADO,
         CONCLUIDO,
         CANCELADO,

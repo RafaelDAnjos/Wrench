@@ -7,29 +7,32 @@ namespace Wrench.Domain.Entities
 {
     public class Demanda
     {
-        protected Demanda() { }
+        protected Demanda()
+        {
+            Estado = EstadoDemanda.DISPONIVEL;
+            Tags = new List<Tag>();
+            RegistroServicos = new List<RegistroServico>();
+        }
 
-        public Demanda(string titulo, string descricao, Guid idDemandante)
+        public Demanda(string titulo, string descricao, Guid idElaborador) : base()
         {
             Titulo = titulo;
             Descricao = descricao;
-            IdDemandante = idDemandante;
-            Estado = EstadoDemanda.DISPONIVEL;
-            Tags = new List<Tag>();
+            IdElaborador = idElaborador;
+
         }
 
         public int IdDemanda { get; set; }
         public string Titulo { get; set; }
         public string Descricao { get; set; }
-        public Guid IdDemandante { get; set; }
-        public Guid IdPrestador { get; set; }
+        public Guid IdElaborador { get; set; }
 
         public EstadoDemanda Estado { get; set; }
 
-        public virtual AppUser Demandante { get; set; }
-        public virtual AppUser Prestador { get; set; }
+        public virtual AppUser Elaborador { get; set; }
 
-        public ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<RegistroServico> RegistroServicos { get; set; }
 
         public void AdicionarTag(Tag tag)
         {
@@ -41,10 +44,24 @@ namespace Wrench.Domain.Entities
             Tags.Remove(tag);
         }
 
-        public void ToparDemanda(Guid idPrestador)
+        public void EscolherDemanda(Guid idPrestador, decimal valor, DateTime prazo, string mensagem)
         {
-            IdPrestador = idPrestador;
+            var registro = new RegistroServico(idPrestador, IdElaborador, valor, prazo, mensagem);
+
+            RegistroServicos.Add(registro);
+        }
+
+        public void ToparDemanda(int idRegistroServico)
+        {
             Estado = EstadoDemanda.TOPADA;
+
+            foreach (var registro in RegistroServicos)
+            {
+                if (registro.IdRegistroServico != idRegistroServico)
+                    registro.Cancelar();
+                else
+                    registro.Agendar();
+            }
         }
     }
 }

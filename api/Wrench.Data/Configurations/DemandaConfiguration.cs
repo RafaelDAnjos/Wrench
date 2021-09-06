@@ -13,7 +13,7 @@ namespace Wrench.Data.Configurations
             builder.Property(x => x.Titulo).HasMaxLength(150).IsRequired();
             builder.Property(x => x.Descricao).HasColumnType("nvarchar(max)");
             builder.Property(x => x.Estado).IsRequired();
-            builder.HasOne(x => x.Demandante).WithMany().HasForeignKey(x => x.IdDemandante);
+            builder.HasOne(x => x.Elaborador).WithMany().HasForeignKey(x => x.IdElaborador);
 
             builder.HasMany(x => x.Tags).WithMany(x => x.Demandas).UsingEntity(x => x.ToTable("TagDemandas"));
         }
