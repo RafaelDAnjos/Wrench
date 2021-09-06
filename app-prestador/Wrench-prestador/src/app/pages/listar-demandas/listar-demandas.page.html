@@ -24,6 +24,7 @@
           <ion-chip color = "secondary" *ngFor= "let tag of demanda.tags">{{tag.nome}}</ion-chip>
         </ion-list>
       </ion-item>
+      <ion-button (click) = "escolherDemanda(demanda)">Escolher demanda</ion-button>
     </ion-card>
     <ion-card  >
       <ion-item >
