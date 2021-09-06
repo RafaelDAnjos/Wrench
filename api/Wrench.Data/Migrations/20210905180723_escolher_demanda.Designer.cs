@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Wrench.Data.Context;
 
 namespace Wrench.Data.Migrations
 {
     [DbContext(typeof(WrenchDbContext))]
-    partial class WrenchDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210905180723_escolher_demanda")]
+    partial class escolher_demanda
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -384,9 +386,6 @@ namespace Wrench.Data.Migrations
 
                     b.Property<Guid>("IdPrestador")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Mensagem")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Prazo")
                         .HasColumnType("datetime2");

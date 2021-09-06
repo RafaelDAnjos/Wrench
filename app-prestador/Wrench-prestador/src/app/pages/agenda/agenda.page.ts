@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { toastController } from '@ionic/core';
 import { format } from 'path';
+
+import { NavController } from '@ionic/angular';
+import { DemandaService } from 'src/app/services/demanda.service';
+
 
 @Component({
   selector: 'app-agenda',
@@ -9,8 +14,13 @@ import { format } from 'path';
   styleUrls: ['./agenda.page.scss'],
 })
 export class AgendaPage implements OnInit {
+  private demandas:any[] = [];
+
 
   constructor(private navCtrl:NavController, private alertCtrl:AlertController, private toastCtrl:ToastController) { }
+
+    this.buscarDemandas();
+  }
 
   ngOnInit() {
   }
@@ -91,6 +101,7 @@ export class AgendaPage implements OnInit {
           }else{
             this.addAvaliacao(form);
 
+
           }
         }
       }],
@@ -104,5 +115,10 @@ export class AgendaPage implements OnInit {
   }
   cancelarServico(){
     //Integrar com o back-end
+
+  async buscarDemandas(){
+    this.demandas = await this.demandaService.buscarDemandasEscolhidas();
+    this.demandas = this.demandas.filter(elem => elem.Topada);
+
   }
 }

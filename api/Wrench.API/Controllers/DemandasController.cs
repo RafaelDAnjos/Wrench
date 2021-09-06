@@ -9,8 +9,6 @@ using Wrench.Data.Context;
 using Wrench.Domain.Entities;
 using Wrench.Domain.Entities.Identity;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Wrench.API.Controllers
 {
     [Route("api/[controller]")]
@@ -28,38 +26,56 @@ namespace Wrench.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetDemandasUsuario()
+        public async Task<ActionResult> GetDemandasSelecionadas()
         {
             var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (user == null)
                 return NotFound("Usuário não encontrado.");
 
-            _dbContext.Entry(user).Collection(x => x.Tags).Load();
-
-            var demandas_usuario = _dbContext.Set<Demanda>().Where(x => user.Id == x.IdDemandante || user.Id == x.IdPrestador).Select(x => new
+            if (await _userManager.IsInRoleAsync(user, "Prestador"))
             {
-                x.IdDemanda,
-                Demandante = new
+                return Ok(_dbContext.Set<RegistroServico>().Where(x => (x.Estado == Domain.Enum.EstadoServico.AGUARDANDO || x.Estado == Domain.Enum.EstadoServico.AGENDADO) && x.IdPrestador == user.Id).Select(x => new
                 {
-                    x.IdDemandante,
-                    x.Demandante.Nome
-                },
-                Prestador = new
+                    x.IdDemanda,
+                    x.Estado,
+                    x.IdRegistroServico,
+                    x.Demanda.Titulo,
+                    x.Demanda.Descricao,
+                    x.ValorEstimado,
+                    x.Prazo,
+                    Topada = x.Estado == Domain.Enum.EstadoServico.AGENDADO,
+                    Demandante = new
+                    {
+                        x.Demandante.Nome,
+                        x.Demandante.Email
+                    }
+                }).ToList());
+            }
+            else
+            {
+                return Ok(_dbContext.Set<Demanda>().Where(x => x.IdElaborador == user.Id && x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.AGUARDANDO)).Select(x => new
                 {
-                    x.IdPrestador,
-                    x.Prestador.Nome
-                },
-                x.Titulo,
-                x.Descricao,
-                Tags = x.Tags.Select(y => new
-                {
-                    y.IdTag,
-                    y.Nome
-                })
-            }).ToList();
-
-            return Ok(demandas_usuario);
+                    x.IdDemanda,
+                    x.Titulo,
+                    x.Descricao,
+                    Propostas = new[]
+                    {
+                        x.RegistroServicos.Select(y => new
+                        {
+                            y.IdRegistroServico,
+                            y.Prazo,
+                            y.ValorEstimado,
+                            y.Mensagem,
+                            Prestador = new
+                            {
+                                y.Prestador.Nome,
+                                y.Prestador.Email
+                            }
+                        })
+                    }
+                }).ToList());
+            }
         }
 
         [HttpGet("demandas-abertas")]
@@ -76,7 +92,7 @@ namespace Wrench.API.Controllers
             var demandas_abertas = _dbContext.Set<Demanda>().Where(x => x.Estado == Domain.Enum.EstadoDemanda.DISPONIVEL && x.Tags.Any(y => user.Tags.Contains(y))).Select(x => new
             {
                 x.IdDemanda,
-                x.IdDemandante,
+                x.IdElaborador,
                 x.Titulo,
                 x.Descricao,
                 Tags = x.Tags.Select(y => new
@@ -107,7 +123,7 @@ namespace Wrench.API.Controllers
             return Ok(new
             {
                 demanda.IdDemanda,
-                demanda.IdDemandante,
+                demanda.IdElaborador,
                 demanda.Titulo,
                 demanda.Descricao,
                 Tags = demanda.Tags.Select(y => new
@@ -120,6 +136,7 @@ namespace Wrench.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Demandante")]
+        //1 - Usuário cria uma demanda
         public async Task<ActionResult> CriarDemandaAsync(CriarDemandaViewModel value)
         {
             var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -139,7 +156,7 @@ namespace Wrench.API.Controllers
             return Ok(new
             {
                 demanda.IdDemanda,
-                demanda.IdDemandante,
+                demanda.IdElaborador,
                 demanda.Titulo,
                 demanda.Descricao,
                 Tags = demanda.Tags.Select(y => new
@@ -150,9 +167,69 @@ namespace Wrench.API.Controllers
             });
         }
 
-        [HttpPost("topar-demanda")]
+        [HttpPost("escolher-demanda")]
         [Authorize(Roles = "Prestador")]
+        //2 - Prestador de serviços escolhe uma demanda e envia mensagem
+        public async Task<ActionResult> EscolherDemandaAsync(EscolherDemandaViewModel value)
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var demanda = _dbContext.Set<Demanda>().Find(value.IdDemanda);
+
+            var tRegistro = _dbContext.Entry(demanda).Collection(x => x.RegistroServicos).LoadAsync();
+
+            if (demanda is null)
+                return NotFound("Demanda não encontrada.");
+
+            await tRegistro;
+
+            if (demanda.RegistroServicos.Where(x => x.IdPrestador == user.Id).Any())
+                return BadRequest("Essa demanda já foi selecionada pelo usuário atual.");
+
+            demanda.EscolherDemanda(user.Id, value.Valor, value.Prazo, value.Mensagem);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("topar-demanda")]
+        [Authorize(Roles = "Demandante")]
+        //3 - Usuário topa a proposta de um dos prestadores de serviços
         public async Task<ActionResult> ToparDemandaAsync(ToparDemandaViewModel value)
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var demanda = _dbContext.Set<Demanda>().Find(value.IdDemanda);
+
+            var tRegistro = _dbContext.Entry(demanda).Collection(x => x.RegistroServicos).LoadAsync();
+
+            if (demanda is null)
+                return NotFound("Demanda não encontrada.");
+
+            await tRegistro;
+
+            demanda.ToparDemanda(value.IdRegistroServico);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(new
+            {
+                demanda.IdDemanda,
+                demanda.IdElaborador,
+                demanda.Titulo,
+                demanda.Descricao,
+                Tags = demanda.Tags.Select(y => new
+                {
+                    y.IdTag,
+                    y.Nome
+                })
+            });
+        }
+
+        //4 - Concluir demanda
+        [HttpPost("concluir-demanda")]
+        public async Task<ActionResult> ConcluirDemandaAsync(ToparDemandaViewModel value)
         {
             var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -161,14 +238,14 @@ namespace Wrench.API.Controllers
             if (demanda == null)
                 return NotFound("Demanda não encontrada.");
 
-            demanda.ToparDemanda(user.Id);
+            //demanda.CDemanda(user.Id);
 
             await _dbContext.SaveChangesAsync();
 
             return Ok(new
             {
                 demanda.IdDemanda,
-                demanda.IdDemandante,
+                demanda.IdElaborador,
                 demanda.Titulo,
                 demanda.Descricao,
                 Tags = demanda.Tags.Select(y => new
@@ -178,5 +255,6 @@ namespace Wrench.API.Controllers
                 })
             });
         }
+
     }
 }

@@ -13,15 +13,19 @@
 
 <ion-content>
   <ion-list>
-
-    <ion-card>
+    <ion-card *ngFor = "let demanda of demandas">
       <ion-item>
-        <ion-label>Titulo demanda</ion-label>
-      </ion-item>
+        <ion-label>{{demanda.titulo}}</ion-label>
+      </ion-item>      
       <ion-item>
-        <ion-label>Nome prestador do demandante</ion-label>
-      </ion-item>
-      
+        <ion-label>{{demanda.descricao}}</ion-label>
+      </ion-item> 
+      <ion-item>
+        <ion-label>{{demanda.valorEstimado}}</ion-label>
+      </ion-item> 
+      <ion-item>
+        <ion-label>{{demanda.prazo}}</ion-label>
+      </ion-item>       
     </ion-card>
   </ion-list>
 </ion-content>
