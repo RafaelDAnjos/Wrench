@@ -29,8 +29,12 @@
           <ion-item>
             <p>Contato: Celular do Prestador</p>
           </ion-item>
-        </ion-row>  
-        </ion-grid>
+        </ion-row> 
+        <ion-row>
+          <ion-col ><ion-button (click)="avaliarDemandante()" >Concluir Serviço</ion-button></ion-col>
+          <ion-col><ion-button (click)="cancelarServico()">Cancelar Serviço</ion-button></ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card>
   </ion-list>
 </ion-content>
