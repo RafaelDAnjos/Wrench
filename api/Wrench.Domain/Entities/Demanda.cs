@@ -19,7 +19,8 @@ namespace Wrench.Domain.Entities
             Titulo = titulo;
             Descricao = descricao;
             IdElaborador = idElaborador;
-
+            Tags = new List<Tag>();
+            RegistroServicos = new List<RegistroServico>();
         }
 
         public int IdDemanda { get; set; }

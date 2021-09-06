@@ -19,6 +19,16 @@ export class DemandaService {
     return this.http.get(`${this.url}/api/demandas/demandas-abertas`,httpOptions).toPromise();
   }
 
+  buscarDemandasEscolhidas():Promise<any>{
+    const token = localStorage.getItem('usuario_logado');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + token
+      })
+    };
+    return this.http.get(`${this.url}/api/demandas/`,httpOptions).toPromise();
+  }
+
   criarDemanda(demanda:any,):Promise<any>{
     const token = localStorage.getItem('usuario_logado');
     const httpOptions = {
@@ -29,7 +39,13 @@ export class DemandaService {
     return this.http.post(`${this.url}/api/demandas`,demanda,httpOptions).toPromise();
   }
 
-
-
-
+  escolherDemanda(demandaEscolhida:any,):Promise<any>{
+    const token = localStorage.getItem('usuario_logado');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + token
+      })
+    };
+    return this.http.post(`${this.url}/api/demandas/escolher-demanda`, demandaEscolhida, httpOptions).toPromise();
+  }
 }

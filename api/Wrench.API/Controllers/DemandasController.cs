@@ -35,7 +35,7 @@ namespace Wrench.API.Controllers
 
             if (await _userManager.IsInRoleAsync(user, "Prestador"))
             {
-                return Ok(_dbContext.Set<RegistroServico>().Where(x => x.Estado == Domain.Enum.EstadoServico.AGUARDANDO && x.IdPrestador == user.Id).Select(x => new
+                return Ok(_dbContext.Set<RegistroServico>().Where(x => (x.Estado == Domain.Enum.EstadoServico.AGUARDANDO || x.Estado == Domain.Enum.EstadoServico.AGENDADO) && x.IdPrestador == user.Id).Select(x => new
                 {
                     x.IdDemanda,
                     x.Estado,
@@ -44,6 +44,7 @@ namespace Wrench.API.Controllers
                     x.Demanda.Descricao,
                     x.ValorEstimado,
                     x.Prazo,
+                    Topada = x.Estado == Domain.Enum.EstadoServico.AGENDADO,
                     Demandante = new
                     {
                         x.Demandante.Nome,
