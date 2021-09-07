@@ -21,5 +21,12 @@ export class DemandasPage implements OnInit {
   async carregarDemandas(){
     this.demandas = await this.demandaService.buscarDemandas();
   }
+  doRefresh(event:any) {
+    console.log('Begin async operation');
 
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      event.target.complete();
+    }, 2000);
+  }
 }

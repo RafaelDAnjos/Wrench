@@ -23,7 +23,14 @@ export class ConversasPage implements OnInit {
     localStorage.removeItem('usuario_logado');
     this.navCtrl.navigateForward('home');
   }
+  doRefresh(event:any) {
+    console.log('Begin async operation');
 
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      event.target.complete();
+    }, 2000);
+  }
   async buscarDemandas(){
     this.demandas = await this.demandaService.buscarDemandasEscolhidas();
     this.demandas = this.demandas.filter(elem => !elem.Topada);

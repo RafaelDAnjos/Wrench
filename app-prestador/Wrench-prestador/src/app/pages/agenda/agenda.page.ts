@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { toastController } from '@ionic/core';
 import { format } from 'path';
-
-import { NavController } from '@ionic/angular';
 import { DemandaService } from 'src/app/services/demanda.service';
 
 
@@ -17,10 +14,10 @@ export class AgendaPage implements OnInit {
   private demandas:any[] = [];
 
 
-  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private toastCtrl:ToastController) { }
-
-    this.buscarDemandas();
+  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private toastCtrl:ToastController,private demandaService:DemandaService) {  this.buscarDemandas();
+  
   }
+  
 
   ngOnInit() {
   }
@@ -101,7 +98,6 @@ export class AgendaPage implements OnInit {
           }else{
             this.addAvaliacao(form);
 
-
           }
         }
       }],
@@ -115,6 +111,15 @@ export class AgendaPage implements OnInit {
   }
   cancelarServico(){
     //Integrar com o back-end
+  }
+  doRefresh(event:any) {
+    console.log('Begin async operation');
+
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      event.target.complete();
+    }, 2000);
+  }
 
   async buscarDemandas(){
     this.demandas = await this.demandaService.buscarDemandasEscolhidas();

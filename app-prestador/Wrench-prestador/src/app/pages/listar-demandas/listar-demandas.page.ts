@@ -72,6 +72,14 @@ export class ListarDemandasPage implements OnInit {
     localStorage.removeItem('usuario_logado');
     this.navCtrl.navigateForward('home');
   }
+  doRefresh(event:any) {
+    console.log('Begin async operation');
+
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      event.target.complete();
+    }, 2000);
+  }
 
 
 }

@@ -11,6 +11,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-list>
     <ion-card>
       <ion-item>
@@ -22,8 +25,8 @@
       <ion-item>
         <ion-label>Mensagem de oferta</ion-label>
       </ion-item>
-      <ion-button>Topar</ion-button>
-      <ion-button>Recusar</ion-button>
+      <ion-button (click) =  "topar()">Topar</ion-button>
+      <ion-button (click) = "recusar()">Recusar</ion-button>
     </ion-card>
   </ion-list>
 </ion-content>

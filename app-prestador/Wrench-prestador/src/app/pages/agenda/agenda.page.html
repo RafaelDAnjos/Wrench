@@ -12,6 +12,9 @@
 
 <ion-content>
   <ion-list>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
     <ion-card>
       <ion-card-subtitle>Titulo da demanda</ion-card-subtitle>
       <ion-grid>
@@ -27,12 +30,12 @@
         </ion-row>  
         <ion-row>
           <ion-item>
-            <p>Contato: Celular do Prestador</p>
+            <p>Contato: Celular do Demandante</p>
           </ion-item>
         </ion-row> 
         <ion-row>
-          <ion-col ><ion-button (click)="avaliarDemandante()" >Concluir Serviço</ion-button></ion-col>
-          <ion-col><ion-button (click)="cancelarServico()">Cancelar Serviço</ion-button></ion-col>
+          <ion-col ><ion-button expand = 'full' (click)="avaliarDemandante()" >Concluir</ion-button></ion-col>
+          <ion-col><ion-button expand = 'full' (click)="cancelarServico()">Cancelar</ion-button></ion-col>
         </ion-row>
       </ion-grid>
     </ion-card>

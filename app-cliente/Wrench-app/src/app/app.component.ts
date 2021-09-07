@@ -8,9 +8,9 @@ import * as firebase from 'firebase/app';
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Demandas', url: 'demandas', icon: 'mail' },
-    { title: 'Conversas', url:'conversas',icon: 'chatbubbles'},
-    {title: 'Agenda',url:'agenda',icon: 'calendar'}
+    { title: 'Demandas Recomendadas', url: 'demandas', icon: 'mail' },
+    { title: 'Demandas Escolhidas', url:'conversas',icon: 'chatbubbles'},
+    {title: 'Demandas Agendadas',url:'agenda',icon: 'calendar'}
     
   ];
  

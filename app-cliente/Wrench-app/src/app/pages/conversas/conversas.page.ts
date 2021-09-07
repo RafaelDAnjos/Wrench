@@ -11,5 +11,19 @@ export class ConversasPage implements OnInit {
 
   ngOnInit() {
   }
+  topar(){
+    //Integrar com o back-end
+  }
+  recusar(){
+    //Integrar com o back-end
+  }
+  doRefresh(event:any) {
+    console.log('Begin async operation');
+
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      event.target.complete();
+    }, 2000);
+  }
 
 }
