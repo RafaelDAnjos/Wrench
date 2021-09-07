@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color = "primary">
+    <ion-title color = "light">Escolha suas Tags</ion-title>
+    <ion-buttons slot=start>
+      <ion-menu-button color='light'></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot = 'end'>
+      <ion-button (click) = "logout()"><ion-icon name = 'exit' color = 'light'></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-list>
+    <ion-item *ngFor = "let tag of tags">
+      <ion-chip>
+        <ion-label>{{tag.nome}}</ion-label>
+        <ion-toggle color = "success" checked = {{tag.check}} (ionChange) = 'statusChange(tag,$event)'></ion-toggle>
+      </ion-chip>
+    </ion-item>
+    
+
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand= 'full' (click) = "continuar()">Continuar</ion-button>
+    <ion-button expand= 'full' (click) =  "criarTag()">Criar tag</ion-button>
+  
+  </ion-toolbar>
+</ion-footer>

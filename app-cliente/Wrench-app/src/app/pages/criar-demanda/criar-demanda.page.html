@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color = 'primary'>
+    <ion-title color = 'light'>Criar Nova Demanda</ion-title>
+    <ion-buttons slot=start>
+      <ion-menu-button color='light'></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot = 'end'>
+      <ion-button (click) = "logout()"><ion-icon name = 'exit' color = 'light'></ion-icon></ion-button>
+    </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div id = "container">
+
+    <ion-card>
+      <ion-item>
+        <ion-label position= 'stacked'>Título:</ion-label>
+        <ion-input placeholder= 'Insira o título da sua demanda' [(ngModel)] = 'tituloD'></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position= 'stacked'>Descrição:</ion-label>
+        <ion-textarea placeholder= 'Descreva com o máximo de detalhes o problema que está enfrentando' [(ngModel)] = 'descD'></ion-textarea>
+      </ion-item>
+    </ion-card>
+      <ion-item>
+        <ion-label>Tags:</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-list>
+          <ion-item *ngFor = "let tag of tags">
+            <ion-label>{{tag.titulo}}</ion-label>
+            <ion-toggle (ionChange) = 'statusChange(tag,$event)'></ion-toggle>
+          </ion-item>
+         
+        </ion-list>
+      </ion-item>
+    <ion-button (click) = "criarTag()">Criar tag</ion-button>
+    
+  </div>
+</ion-content>
+
+<ion-footer>
+<ion-toolbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand= "block" (click)= "voltar()">Cancelar</ion-button>
+
+      </ion-col>
+      <ion-col>
+        <ion-button expand= "block" (click)= "criarNovaDemanda()">Confirmar</ion-button>
+        
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-toolbar>
+</ion-footer>

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color='primary'>
+    <ion-title color='light'>Agenda</ion-title>
+    <ion-buttons slot=start>
+      <ion-menu-button color='light'></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot = 'end'>
+      <ion-button (click) = "logout()"><ion-icon name = 'exit' color = 'light'></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <ion-card>
+      <ion-card-subtitle>Titulo da demanda</ion-card-subtitle>
+      <ion-grid>
+        <ion-row>
+          <ion-item>
+            <p>Prazo: prazo de conclusão</p>
+          </ion-item>
+        </ion-row>  
+        <ion-row>
+          <ion-item>
+            <p>Valor estimado: valor</p>
+          </ion-item>
+        </ion-row>  
+        <ion-row>
+          <ion-item>
+            <p>Contato: Celular do Demandante</p>
+          </ion-item>
+        </ion-row> 
+        <ion-row>
+          <ion-col ><ion-button expand = 'full' (click)="avaliarDemandante()" >Concluir</ion-button></ion-col>
+          <ion-col><ion-button expand = 'full' (click)="cancelarServico()">Cancelar</ion-button></ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </ion-list>
+</ion-content>
