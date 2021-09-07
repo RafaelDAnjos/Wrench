@@ -4,5 +4,6 @@
     {
         public int IdDemanda { get; set; }
         public int IdRegistroServico { get; set; }
+        public decimal ValorCobrado { get; set; }
     }
 }

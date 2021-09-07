@@ -40,7 +40,8 @@ namespace Wrench.Domain.Entities
         public DateTime Prazo { get; set; }
         public string Mensagem { get; set; }
         public decimal ValorEstimado { get; set; }
-        public decimal ValorCobrado { get; set; }
+        public decimal ValorCobradoDemandante { get; set; }
+        public decimal ValorCobradoPrestador { get; set; }
 
         public virtual Demanda Demanda { get; set; }
         public virtual AppUser Demandante { get; set; }
@@ -58,12 +59,18 @@ namespace Wrench.Domain.Entities
             Estado = EstadoServico.TOPADO;
         }
 
-        public void Concluir(TipoUsuario tipoUsuario)
+        public void Concluir(TipoUsuario tipoUsuario, decimal valorCobrado)
         {
             if (tipoUsuario == TipoUsuario.DEMANDANTE)
+            {
                 CheckDemandante = true;
+                ValorCobradoDemandante = valorCobrado;
+            }
             else if (tipoUsuario == TipoUsuario.PRESTADOR)
+            {
                 CheckPrestador = true;
+                ValorCobradoPrestador = valorCobrado;
+            }
 
             if (CheckDemandante && CheckPrestador)
                 Estado = EstadoServico.CONCLUIDO;

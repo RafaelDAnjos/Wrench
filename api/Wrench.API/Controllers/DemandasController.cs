@@ -246,10 +246,10 @@ namespace Wrench.API.Controllers
             var servico = demanda.RegistroServicos.SingleOrDefault(x => x.IdRegistroServico == value.IdRegistroServico);
 
             if (!servico.CheckDemandante && servico.IdDemandante == user.Id)
-                servico.Concluir(RegistroServico.TipoUsuario.DEMANDANTE);
+                servico.Concluir(RegistroServico.TipoUsuario.DEMANDANTE, value.ValorCobrado);
 
             if (!servico.CheckPrestador && servico.IdPrestador == user.Id)
-                servico.Concluir(RegistroServico.TipoUsuario.PRESTADOR);
+                servico.Concluir(RegistroServico.TipoUsuario.PRESTADOR, value.ValorCobrado);
 
             await _dbContext.SaveChangesAsync();
 
