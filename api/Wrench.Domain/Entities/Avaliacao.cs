@@ -5,6 +5,18 @@ namespace Wrench.Domain.Entities
 {
     public class Avaliacao
     {
+        public Avaliacao()
+        {
+
+        }
+
+        public Avaliacao(Nota nota, Guid userId)
+        {
+            ValorNota = nota;
+            IdUsuario = userId;
+            EnviadoEm = DateTime.Now;
+        }
+
         public enum Nota
         {
             PESSIMO = 1,

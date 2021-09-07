@@ -3,7 +3,7 @@
     public enum EstadoDemanda
     {
         DISPONIVEL,
-        TOPADA,
+        EXECUCAO,
         CANCELADA,
         CONCLUIDA
     }

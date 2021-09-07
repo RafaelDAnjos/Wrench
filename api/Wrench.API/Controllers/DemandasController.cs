@@ -35,7 +35,7 @@ namespace Wrench.API.Controllers
 
             if (await _userManager.IsInRoleAsync(user, "Prestador"))
             {
-                return Ok(_dbContext.Set<RegistroServico>().Where(x => (x.Estado == Domain.Enum.EstadoServico.AGUARDANDO || x.Estado == Domain.Enum.EstadoServico.AGENDADO) && x.IdPrestador == user.Id).Select(x => new
+                return Ok(_dbContext.Set<RegistroServico>().Where(x => (x.Estado == Domain.Enum.EstadoServico.SELECIONADO || x.Estado == Domain.Enum.EstadoServico.TOPADO) && x.IdPrestador == user.Id).Select(x => new
                 {
                     x.IdDemanda,
                     x.Estado,
@@ -44,7 +44,7 @@ namespace Wrench.API.Controllers
                     x.Demanda.Descricao,
                     x.ValorEstimado,
                     x.Prazo,
-                    Topada = x.Estado == Domain.Enum.EstadoServico.AGENDADO,
+                    Topada = x.Estado == Domain.Enum.EstadoServico.TOPADO,
                     Demandante = new
                     {
                         x.Demandante.Nome,
@@ -54,14 +54,15 @@ namespace Wrench.API.Controllers
             }
             else
             {
-                return Ok(_dbContext.Set<Demanda>().Where(x => x.IdElaborador == user.Id && x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.AGUARDANDO)).Select(x => new
+                return Ok(_dbContext.Set<Demanda>().Where(x => x.IdElaborador == user.Id && x.Estado == Domain.Enum.EstadoDemanda.DISPONIVEL).Select(x => new
                 {
                     x.IdDemanda,
                     x.Titulo,
                     x.Descricao,
+                    Topada = x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.TOPADO),
                     Propostas = new[]
                     {
-                        x.RegistroServicos.Select(y => new
+                        x.RegistroServicos.Where(y => y.Estado == Domain.Enum.EstadoServico.SELECIONADO || y.Estado == Domain.Enum.EstadoServico.TOPADO).Select(y => new
                         {
                             y.IdRegistroServico,
                             y.Prazo,
@@ -229,31 +230,104 @@ namespace Wrench.API.Controllers
 
         //4 - Concluir demanda
         [HttpPost("concluir-demanda")]
-        public async Task<ActionResult> ConcluirDemandaAsync(ToparDemandaViewModel value)
+        public async Task<ActionResult> ConcluirDemandaAsync(ConcluirDemandaViewModel value)
         {
             var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             var demanda = _dbContext.Set<Demanda>().Find(value.IdDemanda);
 
-            if (demanda == null)
+            var tRegistro = _dbContext.Entry(demanda).Collection(x => x.RegistroServicos).LoadAsync();
+
+            if (demanda is null)
                 return NotFound("Demanda não encontrada.");
 
-            //demanda.CDemanda(user.Id);
+            await tRegistro;
+
+            var servico = demanda.RegistroServicos.SingleOrDefault(x => x.IdRegistroServico == value.IdRegistroServico);
+
+            if (!servico.CheckDemandante && servico.IdDemandante == user.Id)
+                servico.Concluir(RegistroServico.TipoUsuario.DEMANDANTE);
+
+            if (!servico.CheckPrestador && servico.IdPrestador == user.Id)
+                servico.Concluir(RegistroServico.TipoUsuario.PRESTADOR);
 
             await _dbContext.SaveChangesAsync();
 
-            return Ok(new
+            return Ok();
+        }
+
+        [HttpPost("cancelar-demanda")]
+        public async Task<ActionResult> CancelarDemandaAsync(CancelarDemandaViewModel value)
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var demanda = _dbContext.Set<Demanda>().Find(value.IdDemanda);
+
+            var tRegistro = _dbContext.Entry(demanda).Collection(x => x.RegistroServicos).LoadAsync();
+
+            if (demanda is null)
+                return NotFound("Demanda não encontrada.");
+
+            await tRegistro;
+
+            if (demanda.IdElaborador != user.Id && !demanda.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.TOPADO && y.IdPrestador == user.Id))
+                return BadRequest("Usuário não pode cancelar esse serviço.");
+
+            demanda.Cancelar();
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("cancelar-servico")]
+        public async Task<ActionResult> CancelarServicoAsync(CancelarServicoViewModel value)
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var servico = _dbContext.Set<RegistroServico>().Find(value.IdRegistroServico);
+
+            if (servico is null)
+                return NotFound("Serviço não encontrado.");
+
+            if (servico.IdDemandante != user.Id && servico.IdPrestador != user.Id)
+                return BadRequest("Usuário não pode cancelar esse serviço.");
+
+            servico.Cancelar();
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPost("avaliar-servico")]
+        public async Task<ActionResult> AvaliarServicoAsync(AvaliarServicoViewModel value)
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var novaAvaliacao = new Avaliacao((Avaliacao.Nota)value.Nota, user.Id);
+
+            var servico = _dbContext.Set<RegistroServico>().Find(value.IdRegistroServico);
+
+            servico.Demanda = _dbContext.Set<Demanda>().Find(value.IdDemanda);
+            await _dbContext.Entry(servico).Collection(x => x.Avaliacoes).LoadAsync();
+
+            if (servico is null)
+                return NotFound("Serviço não encontrado.");
+
+            if (servico.IdDemandante != user.Id && servico.IdPrestador != user.Id)
+                return BadRequest("Usuário não pode avaliar este serviço.");
+
+            servico.Avaliar(novaAvaliacao);
+
+            if (servico.EhAvaliado())
             {
-                demanda.IdDemanda,
-                demanda.IdElaborador,
-                demanda.Titulo,
-                demanda.Descricao,
-                Tags = demanda.Tags.Select(y => new
-                {
-                    y.IdTag,
-                    y.Nome
-                })
-            });
+                servico.Demanda.Concluir();
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
         }
 
     }

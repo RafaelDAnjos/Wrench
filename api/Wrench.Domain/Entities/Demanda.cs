@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Wrench.Domain.Entities.Identity;
 using Wrench.Domain.Enum;
 
@@ -54,7 +55,7 @@ namespace Wrench.Domain.Entities
 
         public void ToparDemanda(int idRegistroServico)
         {
-            Estado = EstadoDemanda.TOPADA;
+            Estado = EstadoDemanda.EXECUCAO;
 
             foreach (var registro in RegistroServicos)
             {
@@ -63,6 +64,22 @@ namespace Wrench.Domain.Entities
                 else
                     registro.Agendar();
             }
+        }
+
+        public void Cancelar()
+        {
+            Estado = EstadoDemanda.CANCELADA;
+
+            foreach (var registro in RegistroServicos)
+            {
+                registro.Cancelar();
+            }
+        }
+
+        public void Concluir()
+        {
+            if (RegistroServicos.Any(x => x.Estado == EstadoServico.AVALIADO))
+                Estado = EstadoDemanda.CONCLUIDA;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Wrench.Data.Configurations
         {
             builder.HasKey(x => x.IdAvaliacao);
 
-            builder.HasOne(x => x.RegistroServico).WithMany().HasForeignKey(x => x.IdRegistroServico).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.RegistroServico).WithMany(x => x.Avaliacoes).HasForeignKey(x => x.IdRegistroServico).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Usuario).WithMany().HasForeignKey(x => x.IdUsuario);
 
             builder.Property(x => x.ValorNota).IsRequired();
