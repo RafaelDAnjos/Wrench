@@ -11,5 +11,11 @@ export class ConversasPage implements OnInit {
 
   ngOnInit() {
   }
+  topar(){
+    //Integrar com o back-end
+  }
+  recusar(){
+    //Integrar com o back-end
+  }
 
 }
