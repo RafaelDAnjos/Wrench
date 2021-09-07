@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { toastController } from '@ionic/core';
 import { format } from 'path';
+import { DemandaService } from 'src/app/services/demanda.service';
+
 
 @Component({
   selector: 'app-agenda',
@@ -9,8 +11,13 @@ import { format } from 'path';
   styleUrls: ['./agenda.page.scss'],
 })
 export class AgendaPage implements OnInit {
+  private demandas:any[] = [];
 
-  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private toastCtrl:ToastController) { }
+
+  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private toastCtrl:ToastController,private demandaService:DemandaService) {  this.buscarDemandas();
+  
+  }
+  
 
   ngOnInit() {
   }
@@ -112,5 +119,11 @@ export class AgendaPage implements OnInit {
       console.log('Async operation has ended');
       event.target.complete();
     }, 2000);
+  }
+
+  async buscarDemandas(){
+    this.demandas = await this.demandaService.buscarDemandasEscolhidas();
+    this.demandas = this.demandas.filter(elem => elem.Topada);
+
   }
 }
