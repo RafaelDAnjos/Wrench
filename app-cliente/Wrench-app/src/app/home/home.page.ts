@@ -28,8 +28,8 @@ export class HomePage implements OnInit {
       senha: this.inputSenha
     }
     let response = await this.authService.logar(user);
-    if(response.Sucesso){
-      localStorage.setItem('usuario_logado',response.Token);
+    if(response.sucesso){
+      localStorage.setItem('usuario_logado',response.token);
       this.showPageDemandas();
     }else{
       let toast = await this.toastCtrl.create({

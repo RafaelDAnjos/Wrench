@@ -14,11 +14,10 @@ export class AgendaPage implements OnInit {
   private demandas:any[] = [];
 
 
-  constructor(private navCtrl:NavController, private alertCtrl:AlertController, private toastCtrl:ToastController,private demandaService:DemandaService) {  this.buscarDemandas();
-  
+  constructor(private navCtrl:NavController,     private alertCtrl:AlertController,     private toastCtrl:ToastController,    private demandaService:DemandaService) {  
+    this.buscarDemandas();  
   }
   
-
   ngOnInit() {
   }
 
@@ -26,7 +25,7 @@ export class AgendaPage implements OnInit {
     localStorage.removeItem('usuario_logado');
     await this.navCtrl.navigateForward('home');
   }
-  async concluirServico(){
+  async concluirServico(demanda:any){
     let alerta_conclusao = await this.alertCtrl.create({
         header: 'Deseja Concluir esse serviço?',
         inputs: [{
@@ -52,7 +51,7 @@ export class AgendaPage implements OnInit {
         {
           text: 'Adicionar',
           handler: (form) => {
-            this.addConcluir(form);
+            this.addConcluir(form, demanda);
           }
         }],
       }
@@ -60,9 +59,10 @@ export class AgendaPage implements OnInit {
     alerta_conclusao.present();
   }
 
-  addConcluir(form:any){
-    //integrar com o back-end
+  async addConcluir(form:any, demanda:any){    
+    await this.demandaService.concluirDemanda({idDemanda: demanda.idDemanda, idRegistroServico: demanda.idRegistroServico, valorCobrado: form.Valor})
   }
+  
   async avaliarDemandante(){
     let alerta = await this.alertCtrl.create({
       header: 'Por favor avalie o demandante',
@@ -102,14 +102,14 @@ export class AgendaPage implements OnInit {
         }
       }],
     });
-    alerta.present();
-    this.concluirServico();
+    alerta.present();    
   }
+
   addAvaliacao(form:any){
 
     // Integrar com o back-end
   }
-  cancelarServico(){
+  cancelarServico(demanda:any){
     //Integrar com o back-end
   }
   doRefresh(event:any) {
@@ -122,8 +122,8 @@ export class AgendaPage implements OnInit {
   }
 
   async buscarDemandas(){
-    this.demandas = await this.demandaService.buscarDemandasEscolhidas();
-    this.demandas = this.demandas.filter(elem => elem.Topada);
-
+    this.demandas = await this.demandaService.buscarDemandasEscolhidas();    
+    this.demandas = this.demandas.filter(elem => elem.topada);
+    console.log(this.demandas)
   }
 }

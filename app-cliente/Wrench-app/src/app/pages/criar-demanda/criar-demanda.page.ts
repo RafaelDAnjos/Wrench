@@ -16,7 +16,7 @@ export class CriarDemandaPage implements OnInit {
 
   demandas:any[] = [];
   constructor(private navCtrl:NavController, private alertCtrl:AlertController, private tagService:TagService, private toastCtrl:ToastController, private demandaService:DemandaService) {
-    this.demandas = JSON.parse(localStorage.getItem('demandas'));
+    this.buscarListaTag();
     this.tituloD = '';
     this.descD= '';
   }
@@ -27,9 +27,9 @@ export class CriarDemandaPage implements OnInit {
     let novaDemanda = {
       titulo: this.tituloD,
       descricao: this.descD,
-      tags: this.tags.filter(tagItem=>tagItem.check == true)
+      tags: this.tags.filter(tagItem=>tagItem.check == true).map(tag => tag.nome)
     }
-      
+      console.log(novaDemanda);
       await this.demandaService.criarDemanda(novaDemanda);
       this.navCtrl.navigateForward('demandas');
 
