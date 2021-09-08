@@ -1,6 +1,10 @@
 # Wrench
 
-### Descrição do minimundo
+Este projeto tem como objetivo o desenvolvimento de um software, colocando em prática os conhecimentos obtidos durante a disciplina de Engenharia de Software.
+- **Tema**: Plataforma de oferta/demanda de serviços 
+- **Objetivo**: Conectar profissionais a pessoas que necessitem serviços
+
+### Descrição 
 
 O projeto Wrench tem como objetivo a construção de um sistema que conecta usuários com prestadores de serviços. Essa ideia surgiu da necessidade de facilitar essa busca e conectar quem precisa do serviço com quem presta o serviço. Apesar de existirem no mercado alguns serviços parecidos, percebe-se que eles não atendem a demanda da forma que idealizamos. As principais dificuldades enfrentadas na busca e contratação de um prestador de serviço (residencial ou não) são: confiança, preço, falta de acesso, disponibilidade, recomendações ou outros motivos. Ao mesmo tempo, há também as dificuldades que alguns prestadores de serviços podem enfrentar, como a falta de visibilidade, poucos clientes, não ter uma forte recomendação no mercado, dentre outros. 
 
@@ -12,82 +16,38 @@ Do demandante (quem solicita o serviço), o sistema deve permitir que ele se cad
 No perfil do prestador (pessoa física ou jurídica que presta um serviço), o sistema deve permitir que ele se cadastre inserindo nome completo, cnpj ou cpf, os tipos de serviço que presta e também inserir a(s) categoria(s) de prestação de serviço, converse com demandantes, aceite ou rejeite um serviço e sinalize na plataforma que o serviço contratado foi finalizado.
 
 
-## Requisitos Funcionais
+## Subindo o projeto
 
-| RF001 |  Cadastro de prestador de serviço  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir o cadastro do prestador de serviços na plataforma. |
-|  Prioridade |  Alta | 
+## Colaboradores
 
-| RF002 |  Cadastro de demandante  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir o cadastro do demandante na plataforma. |
-|  Prioridade |  Alta | 
-
-| RF003 |  Criar Demanda  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que demandantes consigam criar uma demanda. |
-|  Prioridade |  Alta | 
-
-| RF004 |  Listar/Visualizar Demandas (Prestador de Serviço)  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve listar para o prestador de serviços todas as demandas que contiverem uma tag que é de seu interesse.|
-|  Prioridade |  Alta | 
-
-| RF005 |  Listar/Visualizar Demandas (Demandante)  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve listar as demandas ativas para o demandante.|
-|  Prioridade |  Alta |
-
-| RF006 |  Comunicação entre prestador de serviço e demandante  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que os prestadores de serviços possam se comunicar com os possíveis clientes.|
-|  Prioridade |  Alta |
-
-| RF008 |  Topar demanda  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que o prestador de serviços e o demandante topem realizar a demanda.|
-|  Prioridade |  Alta |
-
-| RF009 |  Recusar Demanda  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que o prestador de serviços ou o demandante recusem a realização da demanda.|
-|  Prioridade |  Alta |
-
-| RF010 |  Exibir contatos  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve exibir o contato do prestador de serviços ao demandante. O sistema deve exibir o contato do demandante ao prestador.|
-|  Prioridade |  Alta |
-
-| RF011 |  Estabelecer prazo para prestação de serviço  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve pedir que o prestador de serviços informe qual a data limite para a conclusão daquela demanda.|
-|  Prioridade |  Alta |
-
-| RF012 |  Definir valor previsto  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve pedir que o prestador de serviços informe qual o valor previsto para a conclusão daquele serviço.|
-|  Prioridade |  Alta |
-
-| RF013 |  Concluir Serviço  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que o demandante e o prestador de serviços concluam a demanda, informando data de conclusão e valor praticado.|
-|  Prioridade |  Alta |
-
-| RF014 |  Negar Serviço  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que o demandante e o prestador de serviços cancelem a execução do serviço. |
-|  Prioridade |  Alta |
-
-| RF015 |  Avaliar prestador  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que um demandante avalie um prestador caso o serviço tenha sido realizado. |
-|  Prioridade |  Alta |
-
-| RF016 |  Avaliar cliente  |
-| ------------------- | ------------------- |
-|  Descrição | O sistema deve permitir que um prestador, caso o serviço tenha sido realizado, avalie o seu cliente. |
-|  Prioridade |  Alta |
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/RafaelDAnjos">
+        <img src="https://github.com/RafaelDAnjos.png" width="100px;" alt="Foto de Rafael dos Anjos"/><br>
+        <sub>
+          <b>Rafael dos Anjos</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/LucasErlacher">
+        <img src="https://github.com/LucasErlacher.png" width="100px;" alt="Foto de Lucas Erlacher"/><br>
+        <sub>
+          <b>Lucas Erlacher</b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/mellyssaStephanny">
+        <img src="https://github.com/mellyssaStephanny.png" width="100px;" alt="Foto de Mellyssa Stephanny"/><br>
+        <sub>
+          <b>Mellyssa Stephanny</b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
 
 
 
