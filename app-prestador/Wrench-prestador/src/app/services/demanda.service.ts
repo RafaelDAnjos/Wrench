@@ -6,8 +6,19 @@ import { Local } from 'protractor/built/driverProviders';
   providedIn: 'root'
 })
 export class DemandaService {
+  
   private url = 'https://localhost:44303'
   constructor(private http:HttpClient) { }
+
+  concluirDemanda(arg0:any) {
+    const token = localStorage.getItem('usuario_logado');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + token
+      })
+    };
+    return this.http.post(`${this.url}/api/demandas/concluir-demanda`,arg0, httpOptions).toPromise();
+  }
 
   buscarDemandas():Promise<any>{
     const token = localStorage.getItem('usuario_logado');

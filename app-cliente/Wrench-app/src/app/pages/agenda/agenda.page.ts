@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
+import { DemandaService } from 'src/app/services/demanda.service';
 
 @Component({
   selector: 'app-agenda',
@@ -7,12 +8,22 @@ import { AlertController, ToastController } from '@ionic/angular';
   styleUrls: ['./agenda.page.scss'],
 })
 export class AgendaPage implements OnInit {
+ private demandas:any[] = [];
 
-  constructor(private alertCtrl:AlertController, private toastCtrl:ToastController) { }
+  constructor(private alertCtrl:AlertController, private toastCtrl:ToastController, private demandaService:DemandaService) { 
+    this.buscarDemandasTopadas();
+  }
 
   ngOnInit() {
   }
-  async concluirServico(){
+
+  async buscarDemandasTopadas(){
+    this.demandas = await this.demandaService.buscarDemandasEscolhidas();
+    this.demandas = this.demandas.filter(x => x.topada);
+    console.log(this.demandas);
+  }
+
+  async concluirServico(demanda:any){
     let alerta_conclusao = await this.alertCtrl.create({
         header: 'Deseja Concluir esse serviço?',
         inputs: [{
@@ -37,8 +48,8 @@ export class AgendaPage implements OnInit {
         },
         {
           text: 'Adicionar',
-          handler: (form) => {
-            this.addConcluir(form);
+          handler: (form) => {          
+            this.addConcluir(form, demanda);
           }
         }],
       }
@@ -46,9 +57,10 @@ export class AgendaPage implements OnInit {
     alerta_conclusao.present();
   }
 
-  addConcluir(form:any){
-    //integrar com o back-end
+  async addConcluir(form:any, demanda:any){    
+    await this.demandaService.concluirDemanda({idDemanda: demanda.idDemanda, idRegistroServico: demanda.propostas[0][0].idRegistroServico, valorCobrado: form.Valor})
   }
+
   async avaliarPrestador(){
     let alerta = await this.alertCtrl.create({
       header: 'Por favor avalie o prestador',
@@ -83,8 +95,7 @@ export class AgendaPage implements OnInit {
         }
       }],
     });
-    alerta.present();
-    this.concluirServico();
+    alerta.present();    
   }
   addAvaliacao(form:any){
 

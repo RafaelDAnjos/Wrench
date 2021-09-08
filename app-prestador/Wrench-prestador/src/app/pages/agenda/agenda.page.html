@@ -15,27 +15,27 @@
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    <ion-card>
-      <ion-card-subtitle>Titulo da demanda</ion-card-subtitle>
+    <ion-card *ngFor="let demanda of demandas">
+      <ion-card-subtitle>{{demanda.titulo}}</ion-card-subtitle>
       <ion-grid>
         <ion-row>
           <ion-item>
-            <p>Prazo: prazo de conclusão</p>
+            <p>Prazo: {{demanda.prazo}}</p>
           </ion-item>
         </ion-row>  
         <ion-row>
           <ion-item>
-            <p>Valor estimado: valor</p>
+            <p>Valor estimado: {{demanda.valorEstimado}}</p>
           </ion-item>
         </ion-row>  
         <ion-row>
           <ion-item>
-            <p>Contato: Celular do Demandante</p>
+            <p>Contato: {{demanda.demandante.email}}</p>
           </ion-item>
         </ion-row> 
         <ion-row>
-          <ion-col ><ion-button expand = 'full' (click)="avaliarDemandante()" >Concluir</ion-button></ion-col>
-          <ion-col><ion-button expand = 'full' (click)="cancelarServico()">Cancelar</ion-button></ion-col>
+          <ion-col ><ion-button expand = 'full' (click)="concluirServico(demanda)" >Concluir</ion-button></ion-col>
+          <ion-col><ion-button expand = 'full' (click)="cancelarServico(demanda)">Cancelar</ion-button></ion-col>
         </ion-row>
       </ion-grid>
     </ion-card>

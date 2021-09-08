@@ -29,7 +29,7 @@ export class CadastroPage implements OnInit {
     }
     let response = await this.authService.cadastrar_usuario(usuario);
     if(response.sucesso){
-      localStorage.setItem('usuario_logado',response.Token);
+      localStorage.setItem('usuario_logado',response.token);
       this.showPageDefinirTags();
     }else{
       let toast = await this.toastCtrl.create({

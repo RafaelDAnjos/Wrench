@@ -54,15 +54,29 @@ namespace Wrench.API.Controllers
             }
             else
             {
-                return Ok(_dbContext.Set<Demanda>().Where(x => x.IdElaborador == user.Id && x.Estado == Domain.Enum.EstadoDemanda.DISPONIVEL).Select(x => new
+                return Ok(_dbContext.Set<Demanda>().Where(x => x.IdElaborador == user.Id && (x.Estado == Domain.Enum.EstadoDemanda.DISPONIVEL || x.Estado == Domain.Enum.EstadoDemanda.EXECUCAO)).Select(x => new
                 {
                     x.IdDemanda,
                     x.Titulo,
                     x.Descricao,
                     Topada = x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.TOPADO),
-                    Propostas = new[]
+                    Propostas = x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.TOPADO) ? new[]
                     {
-                        x.RegistroServicos.Where(y => y.Estado == Domain.Enum.EstadoServico.SELECIONADO || y.Estado == Domain.Enum.EstadoServico.TOPADO).Select(y => new
+                        x.RegistroServicos.Where(y => y.Estado == Domain.Enum.EstadoServico.TOPADO).Select(y => new
+                        {
+                            y.IdRegistroServico,
+                            y.Prazo,
+                            y.ValorEstimado,
+                            y.Mensagem,
+                            Prestador = new
+                            {
+                                y.Prestador.Nome,
+                                y.Prestador.Email
+                            }
+                        })
+                    } : new[]
+                    {
+                        x.RegistroServicos.Where(y => y.Estado == Domain.Enum.EstadoServico.SELECIONADO).Select(y => new
                         {
                             y.IdRegistroServico,
                             y.Prazo,
