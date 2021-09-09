@@ -64,6 +64,7 @@ $ ionic serve --port:8080
 
 ```
 <hr>
+
 ## Colaboradores
 
 <table>
