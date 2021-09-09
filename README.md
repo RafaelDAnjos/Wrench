@@ -16,9 +16,7 @@ realizar cadastro, efetuar login, criação de demandas, dentre outras; e no app
 A proposta do Wrench é tornar mais fácil a contratação de serviços e o sistema propõe exatamente isso. Para entender um pouco mais sobre os dois lados do sistema proposto, tanto do cliente quanto do profissional, confira como o sistema foi idealizado:
 
 - **Para quem quer contratar**:
-Do demandante, o sistema deve permitir que ele se cadastre informando nome completo, escreva um breve resumo do problema que busca solucionar, selecione a categoria de profissional/serviço, veja a lista de prestadores disponíveis, converse com o prestador e então escolha o profissional para efetivação do serviço. Depois de escolhido o prestador, acertado os detalhes de data para realização do serviço e forma de pagamento, o prestador deve realizar o serviço contratado. Após a finalização do mesmo, deve ser efetuado o pagamento (da forma combinada entre as partes) e o demandante realiza avaliação do serviço prestado.  
-
-Assim que esse preenchimento é concluído, a demanda fica disponível para ser aceita pelo prestador. Uma vez confirmada, o aplicativo lista todas as demandas criadas. Quando uma demanda é aceita pelo prestador, ele sinaliza a data para realização daquele serviço bem como um valor (que pode ser alterado após a finalização do mesmo). Ao final da prestação, o cliente realiza uma avaliação do serviço. 
+Do demandante, o sistema deve permitir que ele se cadastre informando nome completo, escreva um breve resumo do problema que busca solucionar, selecione a categoria de profissional/serviço, veja a lista de prestadores disponíveis, converse com o prestador e então escolha o profissional para efetivação do serviço. Depois de escolhido o prestador, acertado os detalhes de data para realização do serviço e forma de pagamento, o prestador deve realizar o serviço contratado. Após a finalização do mesmo, deve ser efetuado o pagamento (da forma combinada entre as partes) e o demandante realiza avaliação do serviço prestado. Assim que esse preenchimento é concluído, a demanda fica disponível para ser aceita pelo prestador. Uma vez confirmada, o aplicativo lista todas as demandas criadas. Quando uma demanda é aceita pelo prestador, ele sinaliza a data para realização daquele serviço bem como um valor (que pode ser alterado após a finalização do mesmo). Ao final da prestação, o cliente realiza uma avaliação do serviço.  
 
 - **Para quem presta serviços**:
 O profissional que tem interesse em começar a atender clientes usando o Wrench terá que se cadastrar na plataforma inserindo nome completo, cnpj ou cpf, os tipos de serviço que presta, bem como a(s) categoria(s) de prestação de serviço. Uma vez cadastrado, o sistema deve permitir que o prestador converse com demandantes, aceite ou rejeite um serviço e sinalize na plataforma que o serviço contratado foi finalizado. Por fim, o sistema irá listar as demandas disponíveis para que o prestadoe entre emcontato com o cliente e combine os detalhes para realização do serviço.
@@ -62,9 +60,6 @@ $ cd /Wrench-prestador
 ## Run
 $ ionic serve --port:8080
 ##Acesse http://localhost:8080 no browser
-
-```
-<hr>
 
 
 ```
