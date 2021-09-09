@@ -15,9 +15,31 @@ Do demandante (quem solicita o serviço), o sistema deve permitir que ele se cad
 
 No perfil do prestador (pessoa física ou jurídica que presta um serviço), o sistema deve permitir que ele se cadastre inserindo nome completo, cnpj ou cpf, os tipos de serviço que presta e também inserir a(s) categoria(s) de prestação de serviço, converse com demandantes, aceite ou rejeite um serviço e sinalize na plataforma que o serviço contratado foi finalizado.
 
+## Ferramentas utilizadas
 
-## Subindo o projeto
+- **Front**:
+  - ionic
+- **Back**:
+  - .NET Core 5.0
 
+## Como executar o projeto
+
+Antes de iniciar o projeto, instale as Ferramentas listadas acima em sua máquina. Além disso, recomendamos o uso do [VSCode](https://code.visualstudio.com/).
+
+
+```bash
+# Clonando o repositório
+$ git clone https://github.com/RafaelDAnjos/Wrench
+
+# Acessando o repositório no terminal. Example:
+$ cd /wrench
+
+# Run
+$ cd /wrench ionic serve
+
+# Accesse http://localhost:8080 no browser
+```
+<hr>
 ## Colaboradores
 
 <table>
@@ -48,6 +70,5 @@ No perfil do prestador (pessoa física ou jurídica que presta um serviço), o s
     </td>
   </tr>
 </table>
-
 
 
