@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Wrench.API.ViewModels;
 using Wrench.API.ViewModels.Tags;
 using Wrench.Data.Context;
 using Wrench.Domain.Entities;
@@ -12,7 +11,6 @@ namespace Wrench.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Prestador")]
     public class TagsController : ControllerBase
     {
         private readonly WrenchDbContext _dbContext;

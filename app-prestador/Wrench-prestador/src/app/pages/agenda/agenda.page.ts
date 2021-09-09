@@ -15,7 +15,7 @@ export class AgendaPage implements OnInit {
 
 
   constructor(private navCtrl:NavController,     private alertCtrl:AlertController,     private toastCtrl:ToastController,    private demandaService:DemandaService) {  
-    this.buscarDemandas();  
+    this.buscarDemandasTopadas();  
   }
   
   ngOnInit() {
@@ -63,54 +63,8 @@ export class AgendaPage implements OnInit {
     await this.demandaService.concluirDemanda({idDemanda: demanda.idDemanda, idRegistroServico: demanda.idRegistroServico, valorCobrado: form.Valor})
   }
   
-  async avaliarDemandante(){
-    let alerta = await this.alertCtrl.create({
-      header: 'Por favor avalie o demandante',
-      inputs: [{
-        name: 'Nota',
-        type: 'number',
-        placeholder: 'Digite uma nota entre 0 e 10',
-      },
-      {
-        name:'Prazo',
-        type: 'date',
-        placeholder: 'Indique a data de conclusão'
-      }],
-      buttons: [{
-        text: 'Cancel',
-        role: 'cancel',
-        cssClass: 'secondary',
-        handler: () => {
-          console.log('Confirm Cancel:');
-        }
-
-      },
-      {
-        text: 'Adicionar',
-        handler: async (form) => {
-          if(form.nota<0 || form.nota>10){
-            let toast = await this.toastCtrl.create({
-              message:"Digite uma nota válida!",
-              position:'top',
-              duration: 2000
-            });
-            toast.present();
-          }else{
-            this.addAvaliacao(form);
-
-          }
-        }
-      }],
-    });
-    alerta.present();    
-  }
-
-  addAvaliacao(form:any){
-
-    // Integrar com o back-end
-  }
-  cancelarServico(demanda:any){
-    //Integrar com o back-end
+  async cancelarServico(demanda:any){
+    await this.demandaService.recusarServico({idRegistroServico: demanda.idRegistroServico});
   }
   doRefresh(event:any) {
     console.log('Begin async operation');
@@ -121,9 +75,7 @@ export class AgendaPage implements OnInit {
     }, 2000);
   }
 
-  async buscarDemandas(){
-    this.demandas = await this.demandaService.buscarDemandasEscolhidas();    
-    this.demandas = this.demandas.filter(elem => elem.topada);
-    console.log(this.demandas)
+  async buscarDemandasTopadas(){
+    this.demandas = await this.demandaService.buscarPropostasTopadas();            
   }
 }

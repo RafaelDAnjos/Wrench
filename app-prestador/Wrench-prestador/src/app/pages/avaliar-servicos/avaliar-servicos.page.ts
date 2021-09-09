@@ -1,33 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { DemandaService } from 'src/app/services/demanda.service';
 
 @Component({
-  selector: 'app-demandas',
-  templateUrl: './demandas.page.html',
-  styleUrls: ['./demandas.page.scss'],
+  selector: 'app-avaliar-servicos',
+  templateUrl: './avaliar-servicos.page.html',
+  styleUrls: ['./avaliar-servicos.page.scss'],
 })
-export class DemandasPage implements OnInit {
-  demandas: any[] = []  
+export class AvaliarServicosPage implements OnInit {
 
-  constructor(private navCtrl: NavController,private alertCtrl:AlertController, private toastCtrl:ToastController, private demandaService:DemandaService) {
-    this.carregarDemandas();
-  }
+  private demandas:any[] = [];
+
+  constructor(private demandaService:DemandaService, private alertCtrl:AlertController, private toastCtrl:ToastController) {
+    this.buscarDemandasAvaliacaoPendente();
+   }
 
   ngOnInit() {
   }
-  async showPageCriarDemanda(){
-    await this.navCtrl.navigateForward('criar-demanda');
-  }
-  async carregarDemandas(){
-    this.demandas = await this.demandaService.buscarMinhasDemandas();    
+
+  async buscarDemandasAvaliacaoPendente(){
+    this.demandas = await this.demandaService.buscarDemandasAvaliacaoPendente();
   }
 
-  async cancelar(demanda:any){
-    await this.demandaService.recusarDemanda({idDemanda: demanda.idDemanda});
-  }
-
-  async avaliarPrestador(demanda:any){
+  async avaliar(demanda){
     let alerta = await this.alertCtrl.create({
       header: 'Por favor avalie o prestador',
       inputs: [{
@@ -60,21 +55,12 @@ export class DemandasPage implements OnInit {
         }
       }],
     });
-    alerta.present();    
+    alerta.present(); 
   }
 
   async addAvaliacao(form:any, demanda:any){
     let vm = {idDemanda: demanda.idDemanda, nota: form.Nota}
     
     await this.demandaService.avaliar(vm);
-  }
-
-  doRefresh(event:any) {
-    console.log('Begin async operation');
-
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      event.target.complete();
-    }, 2000);
   }
 }

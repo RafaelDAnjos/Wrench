@@ -34,6 +34,10 @@ const routes: Routes = [
   {
     path: 'definir-tags',
     loadChildren: () => import('./pages/definir-tags/definir-tags.module').then( m => m.DefinirTagsPageModule)
+  },
+  {
+    path: 'avaliar-servicos',
+    loadChildren: () => import('./pages/avaliar-servicos/avaliar-servicos.module').then( m => m.AvaliarServicosPageModule)
   }
 ];
 

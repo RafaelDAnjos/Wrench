@@ -18,9 +18,7 @@ export class AgendaPage implements OnInit {
   }
 
   async buscarDemandasTopadas(){
-    this.demandas = await this.demandaService.buscarDemandasEscolhidas();
-    this.demandas = this.demandas.filter(x => x.topada);
-    console.log(this.demandas);
+    this.demandas = await this.demandaService.buscarDemandasTopadas();
   }
 
   async concluirServico(demanda:any){
@@ -58,52 +56,13 @@ export class AgendaPage implements OnInit {
   }
 
   async addConcluir(form:any, demanda:any){    
-    await this.demandaService.concluirDemanda({idDemanda: demanda.idDemanda, idRegistroServico: demanda.propostas[0][0].idRegistroServico, valorCobrado: form.Valor})
+    await this.demandaService.concluirDemanda({idDemanda: demanda.idDemanda, idRegistroServico: demanda.idRegistroServico, valorCobrado: form.Valor})
+  }
+  
+  async cancelarServico(demanda:any){
+    await this.demandaService.recusarServico({idRegistroServico: demanda.idRegistroServico});
   }
 
-  async avaliarPrestador(){
-    let alerta = await this.alertCtrl.create({
-      header: 'Por favor avalie o prestador',
-      inputs: [{
-        name: 'Nota',
-        type: 'number',
-        placeholder: 'Digite uma nota entre 0 e 10',
-      }],
-      buttons: [{
-        text: 'Cancel',
-        role: 'cancel',
-        cssClass: 'secondary',
-        handler: () => {
-          console.log('Confirm Cancel:');
-        }
-
-      },
-      {
-        text: 'Adicionar',
-        handler: async (form) => {
-          if(form.nota<0 || form.nota>10){
-            let toast = await this.toastCtrl.create({
-              message:"Digite uma nota válida!",
-              position:'top',
-              duration: 2000
-            });
-            toast.present();
-          }else{
-            this.addAvaliacao(form);
-
-          }
-        }
-      }],
-    });
-    alerta.present();    
-  }
-  addAvaliacao(form:any){
-
-    // Integrar com o back-end
-  }
-  cancelarServico(){
-    //Integrar com o back-end
-  }
   doRefresh(event:any) {
     console.log('Begin async operation');
 

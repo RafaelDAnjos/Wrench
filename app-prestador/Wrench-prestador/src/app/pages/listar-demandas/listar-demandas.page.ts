@@ -16,7 +16,7 @@ export class ListarDemandasPage implements OnInit {
   ngOnInit() {
   }
   async buscarDemandas(){
-    this.demandas = await this.demandaService.buscarDemandas();
+    this.demandas = await this.demandaService.buscarDemandasAbertas();
   }
 
   async escolherDemanda(demanda:any){    

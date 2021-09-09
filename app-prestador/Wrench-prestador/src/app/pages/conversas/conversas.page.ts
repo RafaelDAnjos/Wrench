@@ -13,7 +13,7 @@ export class ConversasPage implements OnInit {
   private demandas:any[] = [];
 
   constructor(private navCtrl:NavController, private demandaService:DemandaService) { 
-    this.buscarDemandas();
+    this.buscarPropostasEnviadas();
   }
 
   ngOnInit() {
@@ -31,9 +31,12 @@ export class ConversasPage implements OnInit {
       event.target.complete();
     }, 2000);
   }
-  async buscarDemandas(){
-    this.demandas = await this.demandaService.buscarDemandasEscolhidas();
-    this.demandas = this.demandas.filter(elem => !elem.Topada);
+  async buscarPropostasEnviadas(){
+    this.demandas = await this.demandaService.buscarPropostasEnviadas();    
+  }
+
+  async cancelarProposta(demanda:any){
+    await this.demandaService.recusarServico({idRegistroServico: demanda.idRegistroServico});
   }
 
 }

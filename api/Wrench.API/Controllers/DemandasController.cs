@@ -45,6 +45,11 @@ namespace Wrench.API.Controllers
                     x.ValorEstimado,
                     x.Prazo,
                     Topada = x.Estado == Domain.Enum.EstadoServico.TOPADO,
+                    Tags = x.Demanda.Tags.Select(y => new
+                    {
+                        y.IdTag,
+                        y.Nome
+                    }),
                     Demandante = new
                     {
                         x.Demandante.Nome,
@@ -59,6 +64,11 @@ namespace Wrench.API.Controllers
                     x.IdDemanda,
                     x.Titulo,
                     x.Descricao,
+                    Tags = x.Tags.Select(y => new
+                    {
+                        y.IdTag,
+                        y.Nome
+                    }),
                     Topada = x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.TOPADO),
                     Propostas = x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.TOPADO) ? new[]
                     {
@@ -93,9 +103,8 @@ namespace Wrench.API.Controllers
             }
         }
 
-        [HttpGet("demandas-abertas")]
-        [Authorize(Roles = "Prestador")]
-        public async Task<ActionResult> GetDemandasDisponiveis()
+        [HttpGet("demandas-escolhidas")]
+        public async Task<ActionResult> GetDemandasEscolhidas()
         {
             var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
@@ -321,16 +330,19 @@ namespace Wrench.API.Controllers
 
             var novaAvaliacao = new Avaliacao((Avaliacao.Nota)value.Nota, user.Id);
 
-            var servico = _dbContext.Set<RegistroServico>().Find(value.IdRegistroServico);
+            var demanda = _dbContext.Set<Demanda>().Find(value.IdDemanda);
 
-            servico.Demanda = _dbContext.Set<Demanda>().Find(value.IdDemanda);
-            await _dbContext.Entry(servico).Collection(x => x.Avaliacoes).LoadAsync();
+            await _dbContext.Entry(demanda).Collection(x => x.RegistroServicos).LoadAsync();
+
+            var servico = demanda.RegistroServicos.FirstOrDefault(x => x.Estado == Domain.Enum.EstadoServico.CONCLUIDO);
 
             if (servico is null)
                 return NotFound("Serviço não encontrado.");
 
             if (servico.IdDemandante != user.Id && servico.IdPrestador != user.Id)
                 return BadRequest("Usuário não pode avaliar este serviço.");
+
+            await _dbContext.Entry(servico).Collection(x => x.Avaliacoes).LoadAsync();
 
             servico.Avaliar(novaAvaliacao);
 
@@ -343,5 +355,216 @@ namespace Wrench.API.Controllers
 
             return Ok();
         }
+
+
+        #region Safezone
+        [HttpGet("minhas-demandas")]
+        [Authorize(Roles = "Demandante")]
+        public async Task<ActionResult> GetMinhasDemandas()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+
+            return Ok(_dbContext.Set<Demanda>().Where(x => x.IdElaborador == user.Id && (x.Estado == Domain.Enum.EstadoDemanda.DISPONIVEL || x.Estado == Domain.Enum.EstadoDemanda.EXECUCAO)).Select(x => new
+            {
+                x.IdDemanda,
+                x.Titulo,
+                x.Descricao,
+                x.Estado,
+                DeveAvaliar = x.RegistroServicos.Any(y => y.Estado == Domain.Enum.EstadoServico.CONCLUIDO && !y.Avaliacoes.Any(z => z.IdUsuario == user.Id)),
+                PodeCancelar = x.Estado == Domain.Enum.EstadoDemanda.DISPONIVEL || !x.RegistroServicos.Any(x => x.Estado == Domain.Enum.EstadoServico.TOPADO || x.Estado == Domain.Enum.EstadoServico.CONCLUIDO),
+                Tags = x.Tags.Select(y => new
+                {
+                    y.IdTag,
+                    y.Nome
+                })
+            }));
+        }
+
+        [HttpGet("demandas-topadas")]
+        [Authorize(Roles = "Demandante")]
+        public async Task<ActionResult> GetMinhasDemandasTopadas()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+
+            var demandasTopadas = _dbContext.Set<RegistroServico>().Where(x => x.Estado == Domain.Enum.EstadoServico.TOPADO && x.IdDemandante == user.Id);
+
+            return Ok(demandasTopadas.Select(x => new
+            {
+                x.IdDemanda,
+                x.IdRegistroServico,
+                x.Demanda.Titulo,
+                x.Prazo,
+                x.ValorEstimado,
+                Prestador = new { x.Prestador.Id, x.Prestador.Email }
+            }));
+        }
+
+        [HttpGet("buscar-propostas")]
+        [Authorize(Roles = "Demandante")]
+        public async Task<ActionResult> GetPropostas()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+            var propostas = _dbContext.Set<RegistroServico>().Where(x => x.Estado == Domain.Enum.EstadoServico.SELECIONADO && x.IdDemandante == user.Id).Select(x => new
+            {
+                x.Demanda.IdDemanda,
+                x.Demanda.Titulo,
+                x.Demanda.Descricao,
+                x.IdRegistroServico,
+                x.Mensagem,
+                x.Prazo,
+                x.ValorEstimado,
+                Prestador = new
+                {
+                    x.Prestador.Id,
+                    x.Prestador.Nome
+                },
+                Tags = x.Demanda.Tags.Select(y => new
+                {
+                    y.IdTag,
+                    y.Nome
+                })
+            });
+
+            return Ok(propostas);
+        }
+
+        [HttpGet("demandas-abertas")]
+        [Authorize(Roles = "Prestador")]
+        public async Task<ActionResult> GetDemandasDisponiveis()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+
+            _dbContext.Entry(user).Collection(x => x.Tags).Load();
+
+            var demandas_abertas = _dbContext.Set<Demanda>().Where(x => x.Estado == Domain.Enum.EstadoDemanda.DISPONIVEL && x.Tags.Any(y => user.Tags.Contains(y)) && !x.RegistroServicos.Any(y => y.IdPrestador == user.Id)).Select(x => new
+            {
+                x.IdDemanda,
+                x.IdElaborador,
+                x.Titulo,
+                x.Descricao,
+                Tags = x.Tags.Select(y => new
+                {
+                    y.IdTag,
+                    y.Nome
+                })
+            }).ToList();
+
+            return Ok(demandas_abertas);
+        }
+
+        [HttpGet("propostas-enviadas")]
+        [Authorize(Roles = "Prestador")]
+        public async Task<ActionResult> GetPropostasEnviadas()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+
+            _dbContext.Entry(user).Collection(x => x.Tags).Load();
+
+            var propostasEnviadas = _dbContext.Set<RegistroServico>().Where(x => x.Estado == Domain.Enum.EstadoServico.SELECIONADO && x.IdPrestador == user.Id);
+
+            return Ok(propostasEnviadas.Select(x => new
+            {
+                x.Demanda.IdDemanda,
+                x.Demanda.Titulo,
+                x.Demanda.Descricao,
+                x.ValorEstimado,
+                x.Prazo,
+                x.IdRegistroServico,
+                Tags = x.Demanda.Tags.Select(y => new
+                {
+                    y.IdTag,
+                    y.Nome
+                }),
+                Demandante = new
+                {
+                    x.Demandante.Nome,
+                    x.Demandante.Email
+                }
+            }));
+        }
+
+        [HttpGet("propostas-topadas")]
+        [Authorize(Roles = "Prestador")]
+        public async Task<ActionResult> GetPropostasTopadas()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+
+            _dbContext.Entry(user).Collection(x => x.Tags).Load();
+
+            var propostasTopadas = _dbContext.Set<RegistroServico>().Where(x => x.Estado == Domain.Enum.EstadoServico.TOPADO && x.IdPrestador == user.Id);
+
+            return Ok(propostasTopadas.Select(x => new
+            {
+                x.Demanda.IdDemanda,
+                x.Demanda.Titulo,
+                x.Demanda.Descricao,
+                x.ValorEstimado,
+                x.Prazo,
+                x.IdRegistroServico,
+                Tags = x.Demanda.Tags.Select(y => new
+                {
+                    y.IdTag,
+                    y.Nome
+                }),
+                Demandante = new
+                {
+                    x.Demandante.Nome,
+                    x.Demandante.Email
+                }
+            }));
+        }
+
+        [HttpGet("propostas-avaliacao")]
+        [Authorize(Roles = "Prestador")]
+        public async Task<ActionResult> GetPropostasAvaliacao()
+        {
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (user == null)
+                return NotFound("Usuário não encontrado.");
+
+            _dbContext.Entry(user).Collection(x => x.Tags).Load();
+
+            var avaliarDemandas = _dbContext.Set<RegistroServico>().Where(x => x.Estado == Domain.Enum.EstadoServico.CONCLUIDO && x.IdPrestador == user.Id && !x.Avaliacoes.Any(y => y.IdUsuario == user.Id));
+
+            return Ok(avaliarDemandas.Select(x => new
+            {
+                x.Demanda.IdDemanda,
+                x.Demanda.Titulo,
+                x.Demanda.Descricao,
+                x.ValorEstimado,
+                x.Prazo,
+                x.IdRegistroServico,
+                Tags = x.Demanda.Tags.Select(y => new
+                {
+                    y.IdTag,
+                    y.Nome
+                }),
+                Demandante = new
+                {
+                    x.Demandante.Nome,
+                    x.Demandante.Email
+                }
+            }));
+        }
+        #endregion
     }
 }

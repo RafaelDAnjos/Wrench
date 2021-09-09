@@ -86,6 +86,7 @@ export class CriarDemandaPage implements OnInit {
       toast.present();
       return;
     }
+    
     let tag = { nome: newTag};
     await this.tagService.criarTag(tag);
 

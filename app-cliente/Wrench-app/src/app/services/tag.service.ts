@@ -12,7 +12,15 @@ export class TagService {
     return this.http.get(`${this.url}/api/Tags`).toPromise();
   }
   criarTag(js:any):Promise<any>{
-    return this.http.post(`${this.url}/api/Tags`,js).toPromise();
+    let token = localStorage.getItem("usuario_logado");
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + token
+      })
+    };
+
+    return this.http.post(`${this.url}/api/Tags`,js, httpOptions).toPromise();
   }
   escolherTag(usuario:any, tags:any[], token:string):Promise<any>{
     const httpOptions = {
